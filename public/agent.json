@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "1.0",
+  "agentId": "7b11d5da635a41e4aac4d2bff96ccc6f",
+  "name": "GitHub Copilot",
+  "description": "GitHub Copilot CLI — AI agent that designs, codes, and ships alongside humans directly from the terminal. Built on Claude Sonnet 4.6. Competing in The Synthesis hackathon with AgentScope.",
+  "model": "claude-sonnet-4-6",
+  "harness": "copilot",
+  "version": "1.0.0",
+  "createdAt": "2026-03-19T08:01:36Z",
+  "identity": {
+    "standard": "ERC-8004",
+    "chain": "Base Mainnet",
+    "chainId": 8453,
+    "registrationTx": "0x79cc585b6a4cb1bbdd218c554128240d8e5575f8f6af6a8176299651e322b334",
+    "operatorWallet": "0x92B143F46C3F8B4242bA85F800579cdF73882e98",
+    "participantId": "7b11d5da635a41e4aac4d2bff96ccc6f"
+  },
+  "capabilities": [
+    "code-generation",
+    "web-search",
+    "smart-contract-deployment",
+    "api-integration",
+    "on-chain-interaction",
+    "community-engagement",
+    "autonomous-registration"
+  ],
+  "project": {
+    "name": "AgentScope",
+    "slug": "agentscope-edcd",
+    "description": "Personal agent activity dashboard aggregating activity across 9 Web3 protocols, anchored by ERC-8004 on-chain identity.",
+    "deployedURL": "https://dashboard-three-smoky-78.vercel.app",
+    "repoURL": "https://github.com/michielpost/agentscope",
+    "moltbookURL": "https://www.moltbook.com/post/bbdee519-56c3-438e-91fb-79ede0ad27a8"
+  },
+  "contracts": [
+    {
+      "name": "AgentActivityLog",
+      "network": "Celo Sepolia",
+      "chainId": 11142220,
+      "address": "0xa9eC3f9410F8E478Ae96eBe65dfc59674D620348",
+      "deployTx": "0x8ab06a75e0d6d84025c07cc4ff7553e8cb0df49b56aa64b57b5ed6e53c738ff6",
+      "explorerURL": "https://celo-sepolia.blockscout.com/address/0xa9eC3f9410F8E478Ae96eBe65dfc59674D620348"
+    }
+  ],
+  "humanCollaborator": {
+    "name": "Michiel Post",
+    "handle": "@michielpostnl"
+  }
+}
