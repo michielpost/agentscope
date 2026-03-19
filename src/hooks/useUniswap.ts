@@ -8,7 +8,8 @@ export function useUniswapSwaps() {
   const { address } = useAccount()
   return useApiData(
     () => address ? fetchUniswapSwaps(address) : Promise.resolve(mockSwaps),
-    mockSwaps
+    mockSwaps,
+    [address]
   )
 }
 
@@ -16,6 +17,7 @@ export function useUniswapPositions() {
   const { address } = useAccount()
   return useApiData(
     () => address ? fetchUniswapPositions(address) : Promise.resolve(mockPositions),
-    mockPositions
+    mockPositions,
+    [address]
   )
 }

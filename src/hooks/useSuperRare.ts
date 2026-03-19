@@ -8,7 +8,8 @@ export function useSuperRareArtworks() {
   const { address } = useAccount()
   return useApiData(
     () => address ? fetchSuperRareArtworks(address) : Promise.resolve(mockArtworks),
-    mockArtworks
+    mockArtworks,
+    [address]
   )
 }
 
@@ -16,6 +17,7 @@ export function useSuperRareSales() {
   const { address } = useAccount()
   return useApiData(
     () => address ? fetchSuperRareSales(address) : Promise.resolve(mockSales),
-    mockSales
+    mockSales,
+    [address]
   )
 }

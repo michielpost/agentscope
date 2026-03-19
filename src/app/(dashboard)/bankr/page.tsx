@@ -1,6 +1,6 @@
 'use client'
 import { useState, useCallback } from 'react'
-import { Brain, DollarSign, Cpu, BarChart2, Loader2 } from 'lucide-react'
+import { Brain, DollarSign, Cpu, BarChart2, Loader2, Key } from 'lucide-react'
 import { StatCard } from '@/components/ui/stat-card'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -8,7 +8,7 @@ import { BankrUsageChart } from '@/components/charts/BankrUsageChart'
 import { useBankrUsage, useBankrLimits } from '@/hooks/useBankr'
 
 export default function BankrPage() {
-  const { data: bankrUsage, loading: usageLoading } = useBankrUsage()
+  const { data: bankrUsage, loading: usageLoading, error: usageError } = useBankrUsage()
   const { data: bankrLimits, loading: limitsLoading } = useBankrLimits()
   const [analysisLoading, setAnalysisLoading] = useState(false)
   const [analysisResult, setAnalysisResult] = useState<{
@@ -70,8 +70,15 @@ and any cost-optimization recommendations.`,
       </div>
 
       {/* Live data banner */}
-      <div className="rounded-lg border border-blue-400/30 bg-blue-400/10 px-4 py-3 text-sm text-blue-300">
-        Connect your Bankr API key to see your agent's live model usage and costs.
+      <div className={`rounded-lg border px-4 py-3 text-sm flex items-center gap-2 ${
+        usageError
+          ? 'border-amber-500/30 bg-amber-500/10 text-amber-300'
+          : 'border-blue-400/30 bg-blue-400/10 text-blue-300'
+      }`}>
+        <Key size={14} />
+        {usageError
+          ? 'Bankr API key not configured — showing demo data. Set BANKR_API_KEY in environment.'
+          : 'Bankr usage is tied to your API key, not wallet address. Data reflects your agent\'s LLM gateway activity.'}
       </div>
 
       {/* Stats */}

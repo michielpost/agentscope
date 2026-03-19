@@ -1,13 +1,15 @@
 'use client'
-import { Shield, Users, Wallet, Lock } from 'lucide-react'
+import { Shield, Users, Wallet, Lock, Wifi, WifiOff } from 'lucide-react'
 import { StatCard } from '@/components/ui/stat-card'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useMetaMaskDelegations } from '@/hooks/useMetaMask'
 import { truncateAddress, formatDate } from '@/lib/utils'
+import { useAccount } from 'wagmi'
 
 export default function MetaMaskPage() {
+  const { address, isConnected } = useAccount()
   const { data: delegations, loading } = useMetaMaskDelegations()
 
   const activeDelegations = delegations.filter((d) => d.active)
@@ -22,18 +24,26 @@ export default function MetaMaskPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-          <span className="text-orange-400">🦊</span> Agent Permissions
-        </h2>
-        <p className="text-sm text-gray-400 mt-1">
-          Spending limits and delegations granted to your agent via ERC-7710
-        </p>
-      </div>
-
-      {/* Live data banner */}
-      <div className="rounded-lg border border-orange-400/30 bg-orange-400/10 px-4 py-3 text-sm text-orange-300">
-        These delegations define what your agent is authorized to do. Connect your wallet to see live permission grants.
+      <div className="flex items-start justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+            <span className="text-orange-400">🦊</span> Agent Permissions
+          </h2>
+          <p className="text-sm text-gray-400 mt-1">
+            Spending limits and delegations granted to your agent via ERC-7710
+          </p>
+        </div>
+        <div className={`flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium ${
+          isConnected
+            ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-400'
+            : 'border-amber-500/30 bg-amber-500/10 text-amber-400'
+        }`}>
+          {isConnected ? (
+            <><div className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" /><Wifi size={10} />Live · {address?.slice(0,6)}…{address?.slice(-4)}</>
+          ) : (
+            <><WifiOff size={10} />Mock data — connect wallet</>
+          )}
+        </div>
       </div>
 
       {/* Stats */}
@@ -85,6 +95,15 @@ export default function MetaMaskPage() {
           {Array.from({ length: 4 }).map((_, i) => (
             <Skeleton key={i} className="h-40 w-full" />
           ))}
+        </div>
+      ) : delegations.length === 0 ? (
+        <div className="rounded-lg border border-white/5 bg-white/3 p-8 text-center">
+          <Shield size={32} className="text-gray-600 mx-auto mb-3" />
+          <p className="text-sm text-gray-400">
+            {isConnected
+              ? `No ERC-7710 delegations found for ${address?.slice(0,8)}…`
+              : 'Connect your wallet to see your agent\'s permission grants'}
+          </p>
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">

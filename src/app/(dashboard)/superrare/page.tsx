@@ -1,13 +1,15 @@
 'use client'
-import { Palette, ImageIcon, TrendingUp, Percent } from 'lucide-react'
+import { Palette, ImageIcon, TrendingUp, Percent, Wifi, WifiOff } from 'lucide-react'
 import { StatCard } from '@/components/ui/stat-card'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useSuperRareArtworks, useSuperRareSales } from '@/hooks/useSuperRare'
 import { truncateAddress, formatTimeAgo, formatDate } from '@/lib/utils'
+import { useAccount } from 'wagmi'
 
 export default function SuperRarePage() {
+  const { address, isConnected } = useAccount()
   const { data: artworks, loading: artworksLoading } = useSuperRareArtworks()
   const { data: sales, loading: salesLoading } = useSuperRareSales()
 
@@ -21,13 +23,26 @@ export default function SuperRarePage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-          <span className="text-violet-400">◆</span> SuperRare / Rare Protocol
-        </h2>
-        <p className="text-sm text-gray-400 mt-1">
-          Art created by your agent on Rare Protocol
-        </p>
+      <div className="flex items-start justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+            <span className="text-violet-400">◆</span> SuperRare / Rare Protocol
+          </h2>
+          <p className="text-sm text-gray-400 mt-1">
+            Art created by your agent on Rare Protocol
+          </p>
+        </div>
+        <div className={`flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium ${
+          isConnected
+            ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-400'
+            : 'border-amber-500/30 bg-amber-500/10 text-amber-400'
+        }`}>
+          {isConnected ? (
+            <><div className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" /><Wifi size={10} />Live · {address?.slice(0,6)}…{address?.slice(-4)}</>
+          ) : (
+            <><WifiOff size={10} />Mock data — connect wallet</>
+          )}
+        </div>
       </div>
 
       {/* Stats */}
@@ -81,6 +96,15 @@ export default function SuperRarePage() {
             {Array.from({ length: 5 }).map((_, i) => (
               <Skeleton key={i} className="h-48 w-full" />
             ))}
+          </div>
+        ) : artworks.length === 0 ? (
+          <div className="rounded-lg border border-white/5 bg-white/3 p-8 text-center">
+            <Palette size={32} className="text-gray-600 mx-auto mb-3" />
+            <p className="text-sm text-gray-400">
+              {isConnected
+                ? `No artworks found for ${address?.slice(0,8)}… on SuperRare`
+                : 'Connect wallet to see your agent\'s artworks'}
+            </p>
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">

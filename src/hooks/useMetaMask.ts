@@ -8,6 +8,7 @@ export function useMetaMaskDelegations() {
   const { address } = useAccount()
   return useApiData(
     () => address ? fetchDelegations(address) : Promise.resolve(mockDelegations),
-    mockDelegations
+    mockDelegations,
+    [address]
   )
 }

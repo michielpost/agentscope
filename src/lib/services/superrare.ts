@@ -49,7 +49,7 @@ export async function fetchSuperRareArtworks(address: string): Promise<SuperRare
       }
     })
   } catch {
-    return mockArtworks
+    return []
   }
 }
 
@@ -90,6 +90,6 @@ export async function fetchSuperRareSales(address: string): Promise<SuperRareSal
       }
     })
   } catch {
-    return mockSales
+    return []
   }
 }

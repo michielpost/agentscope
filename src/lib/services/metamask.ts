@@ -51,8 +51,8 @@ export async function fetchDelegations(address: string): Promise<Delegation[]> {
     ])
 
     if (enabledLogs.length === 0) {
-      // No on-chain delegations found — return mock data so the page still looks useful
-      return mockDelegations
+      // No on-chain delegations found for this address
+      return []
     }
 
     const disabledHashes = new Set(disabledLogs.map((l) => l.args.delegationHash))
@@ -69,7 +69,7 @@ export async function fetchDelegations(address: string): Promise<Delegation[]> {
 
     return delegations
   } catch {
-    // RPC unavailable or contract not deployed on this network — use mock
-    return mockDelegations
+    // RPC unavailable or contract not deployed on this network
+    return []
   }
 }

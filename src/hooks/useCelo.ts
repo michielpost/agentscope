@@ -8,7 +8,8 @@ export function useCeloBalances() {
   const { address } = useAccount()
   return useApiData(
     () => address ? fetchCeloBalances(address) : Promise.resolve(mockBalances),
-    mockBalances
+    mockBalances,
+    [address]
   )
 }
 
@@ -16,6 +17,7 @@ export function useCeloTransactions() {
   const { address } = useAccount()
   return useApiData(
     () => address ? fetchCeloTransactions(address) : Promise.resolve(mockTxs),
-    mockTxs
+    mockTxs,
+    [address]
   )
 }

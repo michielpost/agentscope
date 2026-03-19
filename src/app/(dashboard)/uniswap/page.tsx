@@ -1,13 +1,15 @@
 'use client'
-import { ArrowLeftRight, TrendingUp, Layers, Globe } from 'lucide-react'
+import { ArrowLeftRight, TrendingUp, Layers, Globe, Wifi, WifiOff } from 'lucide-react'
 import { StatCard } from '@/components/ui/stat-card'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useUniswapSwaps, useUniswapPositions } from '@/hooks/useUniswap'
 import { truncateAddress, formatTimeAgo } from '@/lib/utils'
+import { useAccount } from 'wagmi'
 
 export default function UniswapPage() {
+  const { address, isConnected } = useAccount()
   const { data: swaps, loading: swapsLoading } = useUniswapSwaps()
   const { data: positions, loading: positionsLoading } = useUniswapPositions()
 
@@ -18,11 +20,24 @@ export default function UniswapPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-          <span className="text-pink-400">⬡</span> Uniswap
-        </h2>
-        <p className="text-sm text-gray-400 mt-1">Swaps and positions executed by your agent</p>
+      <div className="flex items-start justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+            <span className="text-pink-400">⬡</span> Uniswap
+          </h2>
+          <p className="text-sm text-gray-400 mt-1">Swaps and positions executed by your agent</p>
+        </div>
+        <div className={`flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium ${
+          isConnected
+            ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-400'
+            : 'border-amber-500/30 bg-amber-500/10 text-amber-400'
+        }`}>
+          {isConnected ? (
+            <><div className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" /><Wifi size={10} />Live · {address?.slice(0,6)}…{address?.slice(-4)}</>
+          ) : (
+            <><WifiOff size={10} />Mock data — connect wallet</>
+          )}
+        </div>
       </div>
 
       {/* Stats */}
@@ -79,6 +94,10 @@ export default function UniswapPage() {
                 <Skeleton key={i} className="h-8 w-full" />
               ))}
             </div>
+          ) : swaps.length === 0 ? (
+            <p className="text-sm text-gray-500 py-6 text-center">
+              {isConnected ? `No Uniswap swaps found for ${address?.slice(0,8)}…` : 'No swap history'}
+            </p>
           ) : (
             <div className="overflow-x-auto">
               <table>
@@ -132,6 +151,10 @@ export default function UniswapPage() {
                 <Skeleton key={i} className="h-8 w-full" />
               ))}
             </div>
+          ) : positions.length === 0 ? (
+            <p className="text-sm text-gray-500 py-6 text-center">
+              {isConnected ? `No Uniswap v3 positions found for ${address?.slice(0,8)}…` : 'No positions'}
+            </p>
           ) : (
             <div className="overflow-x-auto">
               <table>

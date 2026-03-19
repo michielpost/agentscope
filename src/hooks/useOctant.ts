@@ -12,6 +12,7 @@ export function useOctantAllocations() {
   const { address } = useAccount()
   return useApiData(
     () => address ? fetchOctantAllocations(address) : Promise.resolve(mockAllocations),
-    mockAllocations
+    mockAllocations,
+    [address]
   )
 }

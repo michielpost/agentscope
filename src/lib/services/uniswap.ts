@@ -56,7 +56,8 @@ export async function fetchUniswapSwaps(address: string): Promise<UniswapSwap[]>
       }
     })
   } catch {
-    return mockSwaps
+    // Return empty when connected — don't mask real "no activity" with mock data
+    return []
   }
 }
 
@@ -101,6 +102,6 @@ export async function fetchUniswapPositions(address: string): Promise<UniswapPos
       }
     })
   } catch {
-    return mockPositions
+    return []
   }
 }
