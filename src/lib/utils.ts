@@ -29,3 +29,10 @@ export function formatDate(timestamp: number): string {
     year: "numeric",
   })
 }
+
+/** parseFloat that returns 0 for undefined, null, empty string, or NaN */
+export function safeFloat(value: string | number | undefined | null): number {
+  if (value === undefined || value === null || value === '') return 0
+  const n = typeof value === 'number' ? value : parseFloat(value)
+  return isNaN(n) ? 0 : n
+}

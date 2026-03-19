@@ -5,7 +5,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useUniswapSwaps, useUniswapPositions } from '@/hooks/useUniswap'
-import { truncateAddress, formatTimeAgo } from '@/lib/utils'
+import { truncateAddress, formatTimeAgo , safeFloat} from '@/lib/utils'
 import { useAccount } from 'wagmi'
 
 export default function UniswapPage() {
@@ -13,8 +13,8 @@ export default function UniswapPage() {
   const { data: swaps, loading: swapsLoading } = useUniswapSwaps()
   const { data: positions, loading: positionsLoading } = useUniswapPositions()
 
-  const totalVolume = swaps.reduce((sum, s) => sum + parseFloat(s.amountIn), 0)
-  const totalFees = positions.reduce((sum, p) => sum + parseFloat(p.feesEarned), 0)
+  const totalVolume = swaps.reduce((sum, s) => sum + safeFloat(s.amountIn), 0)
+  const totalFees = positions.reduce((sum, p) => sum + safeFloat(p.feesEarned), 0)
   const networks = [...new Set(swaps.map((s) => s.network))].length
 
   return (
@@ -176,7 +176,7 @@ export default function UniswapPage() {
                         </span>
                       </td>
                       <td>{(pos.feeTier / 10000).toFixed(2)}%</td>
-                      <td>${parseFloat(pos.liquidity).toLocaleString()}</td>
+                      <td>${safeFloat(pos.liquidity).toLocaleString()}</td>
                       <td>
                         <Badge variant={pos.inRange ? 'success' : 'warning'}>
                           {pos.inRange ? 'In Range' : 'Out of Range'}

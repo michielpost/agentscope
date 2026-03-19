@@ -5,7 +5,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useCeloBalances, useCeloTransactions } from '@/hooks/useCelo'
-import { truncateAddress, formatTimeAgo } from '@/lib/utils'
+import { truncateAddress, formatTimeAgo , safeFloat} from '@/lib/utils'
 import { useApiData } from '@/hooks/useApiData'
 import { useAccount } from 'wagmi'
 import {
@@ -206,14 +206,14 @@ export default function CeloPage() {
           <>
             <StatCard
               title="CELO Balance"
-              value={`${parseFloat(celoBalance?.balance ?? '0').toLocaleString()} CELO`}
+              value={`${safeFloat(celoBalance?.balance ?? '0').toLocaleString()} CELO`}
               subtitle={`≈ $${celoBalance?.usdValue}`}
               icon={Coins}
               color="text-green-400"
             />
             <StatCard
               title="cUSD Balance"
-              value={`${parseFloat(cusdBalance?.balance ?? '0').toLocaleString()} cUSD`}
+              value={`${safeFloat(cusdBalance?.balance ?? '0').toLocaleString()} cUSD`}
               subtitle="Celo Dollar stablecoin"
               icon={Coins}
               color="text-green-400"
@@ -248,10 +248,10 @@ export default function CeloPage() {
               >
                 <p className="text-xs text-gray-400">{b.token}</p>
                 <p className="mt-1 text-xl font-bold text-white">
-                  {parseFloat(b.balance).toLocaleString()}
+                  {safeFloat(b.balance).toLocaleString()}
                 </p>
                 <p className="text-sm text-gray-500">{b.symbol}</p>
-                <p className="mt-2 text-xs text-emerald-400">≈ ${parseFloat(b.usdValue).toLocaleString()}</p>
+                <p className="mt-2 text-xs text-emerald-400">≈ ${safeFloat(b.usdValue).toLocaleString()}</p>
               </div>
             ))}
       </div>

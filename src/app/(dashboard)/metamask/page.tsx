@@ -5,7 +5,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useMetaMaskDelegations } from '@/hooks/useMetaMask'
-import { truncateAddress, formatDate } from '@/lib/utils'
+import { truncateAddress, formatDate , safeFloat} from '@/lib/utils'
 import { useAccount } from 'wagmi'
 
 export default function MetaMaskPage() {
@@ -15,10 +15,10 @@ export default function MetaMaskPage() {
   const activeDelegations = delegations.filter((d) => d.active)
   const totalSpendLimit = delegations
     .filter((d) => d.active && d.spendLimit)
-    .reduce((sum, d) => sum + parseFloat(d.spendLimit ?? '0'), 0)
+    .reduce((sum, d) => sum + safeFloat(d.spendLimit ?? '0'), 0)
   const totalSpent = delegations
     .filter((d) => d.active && d.spentSoFar)
-    .reduce((sum, d) => sum + parseFloat(d.spentSoFar ?? '0'), 0)
+    .reduce((sum, d) => sum + safeFloat(d.spentSoFar ?? '0'), 0)
   const totalCaveats = delegations.reduce((sum, d) => sum + d.caveats.length, 0)
 
   return (
@@ -110,7 +110,7 @@ export default function MetaMaskPage() {
           {delegations.map((del) => {
             const spendPct =
               del.spendLimit && del.spentSoFar
-                ? (parseFloat(del.spentSoFar) / parseFloat(del.spendLimit)) * 100
+                ? (safeFloat(del.spentSoFar) / safeFloat(del.spendLimit)) * 100
                 : 0
 
             return (

@@ -4,14 +4,14 @@ import { StatCard } from '@/components/ui/stat-card'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useOctantEpochs, useOctantAllocations } from '@/hooks/useOctant'
-import { truncateAddress, formatDate } from '@/lib/utils'
+import { truncateAddress, formatDate , safeFloat} from '@/lib/utils'
 
 export default function OctantPage() {
   const { data: epochs, loading: epochsLoading } = useOctantEpochs()
   const { data: allocations, loading: allocsLoading } = useOctantAllocations()
 
   const currentEpoch = epochs[0]
-  const totalAllocated = allocations.reduce((sum, a) => sum + parseFloat(a.amount), 0)
+  const totalAllocated = allocations.reduce((sum, a) => sum + safeFloat(a.amount), 0)
   const projectsSupported = new Set(allocations.map((a) => a.projectAddress)).size
 
   const epochProgress = currentEpoch
@@ -70,7 +70,7 @@ export default function OctantPage() {
             />
             <StatCard
               title="Matched Rewards"
-              value={`${parseFloat(currentEpoch?.matchedRewards ?? '0').toLocaleString()} GLM`}
+              value={`${safeFloat(currentEpoch?.matchedRewards ?? '0').toLocaleString()} GLM`}
               subtitle="Protocol matching bonus"
               icon={Sparkles}
               color="text-teal-400"
@@ -101,13 +101,13 @@ export default function OctantPage() {
                 <div>
                   <p className="text-xs text-gray-400">Total Rewards</p>
                   <p className="text-sm text-teal-400 mt-0.5">
-                    {parseFloat(currentEpoch?.totalRewards ?? '0').toLocaleString()} GLM
+                    {safeFloat(currentEpoch?.totalRewards ?? '0').toLocaleString()} GLM
                   </p>
                 </div>
                 <div>
                   <p className="text-xs text-gray-400">Matched Rewards</p>
                   <p className="text-sm text-teal-400 mt-0.5">
-                    {parseFloat(currentEpoch?.matchedRewards ?? '0').toLocaleString()} GLM
+                    {safeFloat(currentEpoch?.matchedRewards ?? '0').toLocaleString()} GLM
                   </p>
                 </div>
               </div>

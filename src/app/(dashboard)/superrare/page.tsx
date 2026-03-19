@@ -5,7 +5,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useSuperRareArtworks, useSuperRareSales } from '@/hooks/useSuperRare'
-import { truncateAddress, formatTimeAgo, formatDate } from '@/lib/utils'
+import { truncateAddress, formatTimeAgo, formatDate , safeFloat} from '@/lib/utils'
 import { useAccount } from 'wagmi'
 
 export default function SuperRarePage() {
@@ -13,10 +13,10 @@ export default function SuperRarePage() {
   const { data: artworks, loading: artworksLoading } = useSuperRareArtworks()
   const { data: sales, loading: salesLoading } = useSuperRareSales()
 
-  const totalSalesVolume = sales.reduce((sum, s) => sum + parseFloat(s.salePrice), 0)
+  const totalSalesVolume = sales.reduce((sum, s) => sum + safeFloat(s.salePrice), 0)
   const listedArtworks = artworks.filter((a) => a.status === 'listed')
   const floorPrice = listedArtworks.length
-    ? Math.min(...listedArtworks.map((a) => parseFloat(a.price ?? '0')))
+    ? Math.min(...listedArtworks.map((a) => safeFloat(a.price ?? '0')))
     : 0
   const royaltiesEarned = (totalSalesVolume * 0.1).toFixed(2)
 

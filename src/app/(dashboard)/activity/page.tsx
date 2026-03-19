@@ -10,7 +10,7 @@ import { useUniswapSwaps } from '@/hooks/useUniswap'
 import { useBankrUsage } from '@/hooks/useBankr'
 import { useMetaMaskDelegations } from '@/hooks/useMetaMask'
 import { useOctantAllocations } from '@/hooks/useOctant'
-import { formatTimeAgo } from '@/lib/utils'
+import { formatTimeAgo , safeFloat} from '@/lib/utils'
 import type { CeloTransaction, UniswapSwap, BankrUsage, Delegation, OctantAllocation } from '@/types'
 
 type Protocol = 'all' | 'uniswap' | 'celo' | 'metamask' | 'bankr' | 'superrare' | 'octant' | 'olas' | 'settlement' | 'venice' | 'base'
@@ -67,11 +67,11 @@ function celoTxToActivity(tx: CeloTransaction): AgentActivity {
     id: `celo-${tx.hash}`,
     protocol: 'celo',
     action: tx.from.toLowerCase() === tx.to.toLowerCase() ? 'Contract interaction' : 'Token transfer',
-    detail: `${parseFloat(tx.value).toFixed(4)} ${tx.token} → ${short(tx.to)}`,
+    detail: `${safeFloat(tx.value).toFixed(4)} ${tx.token} → ${short(tx.to)}`,
     timestamp: tx.timestamp,
     txHash: tx.hash,
     status: tx.status === 'success' ? 'completed' : tx.status === 'failed' ? 'failed' : 'pending',
-    costUsd: parseFloat(tx.value) * 0.001, // gas approx
+    costUsd: safeFloat(tx.value) * 0.001, // gas approx
   }
 }
 
@@ -80,11 +80,11 @@ function uniswapSwapToActivity(swap: UniswapSwap): AgentActivity {
     id: `uniswap-${swap.id}`,
     protocol: 'uniswap',
     action: 'Executed swap',
-    detail: `${parseFloat(swap.amountIn).toFixed(4)} ${swap.tokenIn} → ${parseFloat(swap.amountOut).toFixed(4)} ${swap.tokenOut} on ${swap.network}`,
+    detail: `${safeFloat(swap.amountIn).toFixed(4)} ${swap.tokenIn} → ${safeFloat(swap.amountOut).toFixed(4)} ${swap.tokenOut} on ${swap.network}`,
     timestamp: swap.timestamp,
     txHash: swap.txHash,
     status: 'completed',
-    costUsd: parseFloat(swap.amountIn) * 0.003, // 0.3% fee estimate
+    costUsd: safeFloat(swap.amountIn) * 0.003, // 0.3% fee estimate
   }
 }
 
@@ -116,7 +116,7 @@ function octantAllocationToActivity(a: OctantAllocation): AgentActivity {
     id: `octant-${a.projectAddress}-${a.epoch}`,
     protocol: 'octant',
     action: 'Funding allocated',
-    detail: `${parseFloat(a.amount).toFixed(4)} GLM → ${a.projectName} (Epoch ${a.epoch})`,
+    detail: `${safeFloat(a.amount).toFixed(4)} GLM → ${a.projectName} (Epoch ${a.epoch})`,
     timestamp: a.timestamp,
     status: 'completed',
     costUsd: 0,

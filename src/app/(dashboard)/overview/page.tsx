@@ -12,7 +12,7 @@ import { useUniswapSwaps, useUniswapPositions } from '@/hooks/useUniswap'
 import { useOlasAgents } from '@/hooks/useOlas'
 import { useBankrUsage } from '@/hooks/useBankr'
 import { agentSummary } from '@/lib/mock-data'
-import { truncateAddress, formatTimeAgo } from '@/lib/utils'
+import { truncateAddress, formatTimeAgo , safeFloat} from '@/lib/utils'
 
 export default function OverviewPage() {
   const { address, isConnected } = useAccount()
@@ -27,8 +27,8 @@ export default function OverviewPage() {
   const loading = celoLoading || txLoading || swapsLoading || posLoading
 
   // Compute real stats from live data
-  const celoUsdTotal = celoBalances.reduce((s, b) => s + parseFloat(b.usdValue ?? '0'), 0)
-  const uniswapVolume = swaps.reduce((s, sw) => s + parseFloat(sw.amountIn ?? '0'), 0)
+  const celoUsdTotal = celoBalances.reduce((s, b) => s + safeFloat(b.usdValue ?? '0'), 0)
+  const uniswapVolume = swaps.reduce((s, sw) => s + safeFloat(sw.amountIn ?? '0'), 0)
   const bankrSpend = bankrUsage.reduce((s, u) => s + (u.costUsd ?? 0), 0)
   const totalSpend = isConnected ? (celoUsdTotal + uniswapVolume * 0.003 + bankrSpend) : agentSummary.totalSpendUsd
 
@@ -39,7 +39,7 @@ export default function OverviewPage() {
   const recentActivity = [
     ...swaps.slice(0, 4).map(s => ({
       id: s.id,
-      description: `Swapped ${parseFloat(s.amountIn).toFixed(4)} ${s.tokenIn} → ${parseFloat(s.amountOut).toFixed(4)} ${s.tokenOut}`,
+      description: `Swapped ${safeFloat(s.amountIn).toFixed(4)} ${s.tokenIn} → ${safeFloat(s.amountOut).toFixed(4)} ${s.tokenOut}`,
       protocol: 'Uniswap',
       timestamp: s.timestamp,
       color: 'text-pink-400',
@@ -47,7 +47,7 @@ export default function OverviewPage() {
     })),
     ...celoTxs.slice(0, 3).map(t => ({
       id: t.hash,
-      description: `Sent ${parseFloat(t.value).toFixed(2)} ${t.token} to ${truncateAddress(t.to)}`,
+      description: `Sent ${safeFloat(t.value).toFixed(2)} ${t.token} to ${truncateAddress(t.to)}`,
       protocol: 'Celo',
       timestamp: t.timestamp,
       color: 'text-green-400',
@@ -137,8 +137,8 @@ export default function OverviewPage() {
               {celoBalances.map(b => (
                 <div key={b.symbol} className="rounded-lg border border-white/5 bg-white/3 p-3 text-center">
                   <p className="text-xs text-gray-400">{b.symbol}</p>
-                  <p className="text-lg font-bold text-white mt-0.5">{parseFloat(b.balance).toFixed(4)}</p>
-                  <p className="text-xs text-emerald-400">${parseFloat(b.usdValue).toFixed(2)}</p>
+                  <p className="text-lg font-bold text-white mt-0.5">{safeFloat(b.balance).toFixed(4)}</p>
+                  <p className="text-xs text-emerald-400">${safeFloat(b.usdValue).toFixed(2)}</p>
                 </div>
               ))}
             </div>
@@ -229,7 +229,7 @@ export default function OverviewPage() {
                 <div key={p.id} className="flex items-center justify-between rounded-lg border border-white/5 bg-white/3 p-3">
                   <div>
                     <p className="text-sm font-medium text-white">{p.token0}/{p.token1}</p>
-                    <p className="text-xs text-gray-400">Fee tier: {p.feeTier} · Fees: ${parseFloat(p.feesEarned).toFixed(4)}</p>
+                    <p className="text-xs text-gray-400">Fee tier: {p.feeTier} · Fees: ${safeFloat(p.feesEarned).toFixed(4)}</p>
                   </div>
                   <div className="text-right">
                     <Badge variant={p.inRange ? 'success' : 'warning'}>{p.inRange ? 'In range' : 'Out of range'}</Badge>

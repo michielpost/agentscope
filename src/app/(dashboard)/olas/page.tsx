@@ -5,7 +5,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useOlasAgents, useOlasServices } from '@/hooks/useOlas'
-import { truncateAddress, formatTimeAgo } from '@/lib/utils'
+import { truncateAddress, formatTimeAgo , safeFloat} from '@/lib/utils'
 
 export default function OlasPage() {
   const { data: agents, loading: agentsLoading } = useOlasAgents()
@@ -13,7 +13,7 @@ export default function OlasPage() {
 
   const activeCount = agents.filter((a) => a.status === 'active').length
   const deployedServices = services.filter((s) => s.state === 'DEPLOYED').length
-  const totalStaked = agents.reduce((sum, a) => sum + parseFloat(a.stakedAmount), 0)
+  const totalStaked = agents.reduce((sum, a) => sum + safeFloat(a.stakedAmount), 0)
 
   return (
     <div className="space-y-6">
