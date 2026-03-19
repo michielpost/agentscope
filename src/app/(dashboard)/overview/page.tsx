@@ -1,4 +1,4 @@
-import { DollarSign, Bot, Zap, AlertTriangle } from 'lucide-react'
+import { DollarSign, Bot, Zap, AlertTriangle, Fingerprint, ExternalLink } from 'lucide-react'
 import { StatCard } from '@/components/ui/stat-card'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -33,10 +33,15 @@ const recentActivity = [
 export default function OverviewPage() {
   return (
     <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold text-white">Your Agent&apos;s Activity</h1>
+        <p className="text-sm text-gray-400 mt-1">Real-time view of what your agent is doing across Web3 protocols</p>
+      </div>
+
       {/* Stats row */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard
-          title="Total Spend (30d)"
+          title="Agent Spend (30d)"
           value={`$${agentSummary.totalSpendUsd.toFixed(2)}`}
           subtitle="Across all protocols"
           icon={DollarSign}
@@ -44,14 +49,14 @@ export default function OverviewPage() {
           color="text-emerald-400"
         />
         <StatCard
-          title="Active Agents"
+          title="Active Agent Services"
           value={String(agentSummary.activeAgents)}
           subtitle="Running right now"
           icon={Bot}
           color="text-blue-400"
         />
         <StatCard
-          title="Tasks In Progress"
+          title="Pending Actions"
           value={String(agentSummary.tasksInProgress)}
           subtitle="Pending completion"
           icon={Zap}
@@ -59,7 +64,7 @@ export default function OverviewPage() {
           color="text-violet-400"
         />
         <StatCard
-          title="Alerts"
+          title="Permission Alerts"
           value={String(agentSummary.alerts)}
           subtitle="Require attention"
           icon={AlertTriangle}
@@ -138,6 +143,33 @@ export default function OverviewPage() {
           </CardContent>
         </Card>
       </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Fingerprint size={18} className="text-amber-400" />
+            Agent Identity
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center justify-between">
+            <div className="space-y-1">
+              <p className="text-sm font-medium text-white">GitHub Copilot</p>
+              <p className="text-xs text-gray-400 font-mono">7b11d5da...cc6f</p>
+              <p className="text-xs text-gray-500">7 protocols connected</p>
+            </div>
+            <div className="text-right space-y-2">
+              <div className="flex items-center gap-1.5 justify-end">
+                <span className="h-2 w-2 rounded-full bg-amber-400"></span>
+                <span className="text-xs text-amber-400 font-medium">ERC-8004 · Base Mainnet</span>
+              </div>
+              <a href="https://basescan.org/tx/0x79cc585b6a4cb1bbdd218c554128240d8e5575f8f6af6a8176299651e322b334" target="_blank" rel="noopener noreferrer" className="text-xs text-gray-500 hover:text-amber-400 flex items-center gap-1 justify-end transition-colors">
+                0x79cc...2334 <ExternalLink size={10} />
+              </a>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }

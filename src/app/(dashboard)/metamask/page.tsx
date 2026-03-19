@@ -24,16 +24,16 @@ export default function MetaMaskPage() {
       {/* Header */}
       <div>
         <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-          <span className="text-orange-400">🦊</span> MetaMask Delegation Framework
+          <span className="text-orange-400">🦊</span> Agent Permissions
         </h2>
         <p className="text-sm text-gray-400 mt-1">
-          ERC-7710/7715 — grant and manage agent spending authority
+          Spending limits and delegations granted to your agent via ERC-7710
         </p>
       </div>
 
       {/* Live data banner */}
       <div className="rounded-lg border border-orange-400/30 bg-orange-400/10 px-4 py-3 text-sm text-orange-300">
-        Live delegation data requires MetaMask Delegation Framework SDK (ERC-7710). Currently showing demo data.
+        These delegations define what your agent is authorized to do. Connect your wallet to see live permission grants.
       </div>
 
       {/* Stats */}

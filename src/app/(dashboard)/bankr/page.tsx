@@ -27,16 +27,16 @@ export default function BankrPage() {
       {/* Header */}
       <div>
         <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-          <span className="text-blue-400">◈</span> Bankr LLM Gateway
+          <span className="text-blue-400">◈</span> Agent LLM Usage
         </h2>
         <p className="text-sm text-gray-400 mt-1">
-          On-chain AI inference — metered LLM calls via crypto payments
+          API calls made by your agent through the Bankr LLM Gateway
         </p>
       </div>
 
       {/* Live data banner */}
       <div className="rounded-lg border border-blue-400/30 bg-blue-400/10 px-4 py-3 text-sm text-blue-300">
-        Add BANKR_API_KEY to .env.local to see live LLM gateway usage.
+        Connect your Bankr API key to see your agent's live model usage and costs.
       </div>
 
       {/* Stats */}

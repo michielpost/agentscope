@@ -32,7 +32,7 @@ export default function OctantPage() {
           <span className="text-teal-400">♥</span> Octant — Public Goods Funding
         </h2>
         <p className="text-sm text-gray-400 mt-1">
-          Stake GLM, earn rewards, fund the open-source ecosystem
+          Public goods allocations submitted by your agent
         </p>
       </div>
 

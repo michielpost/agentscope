@@ -22,7 +22,7 @@ export default function UniswapPage() {
         <h2 className="text-2xl font-bold text-white flex items-center gap-2">
           <span className="text-pink-400">⬡</span> Uniswap
         </h2>
-        <p className="text-sm text-gray-400 mt-1">Agentic Finance — automated swaps and liquidity management</p>
+        <p className="text-sm text-gray-400 mt-1">Swaps and positions executed by your agent</p>
       </div>
 
       {/* Stats */}

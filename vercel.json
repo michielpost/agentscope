@@ -1,0 +1,16 @@
+{
+  "buildCommand": "npm run build",
+  "devCommand": "npm run dev",
+  "installCommand": "npm install",
+  "framework": "nextjs",
+  "outputDirectory": ".next",
+  "env": {
+    "NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID": "demo",
+    "NEXT_PUBLIC_CELO_RPC_URL": "https://forno.celo.org",
+    "NEXT_PUBLIC_CELO_BLOCKSCOUT_URL": "https://explorer.celo.org/mainnet/api",
+    "NEXT_PUBLIC_UNISWAP_SUBGRAPH_URL": "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3",
+    "NEXT_PUBLIC_SUPERRARE_API_URL": "https://api.superrare.com/graphql",
+    "NEXT_PUBLIC_OCTANT_API_URL": "https://backend.production.octant.app",
+    "NEXT_PUBLIC_OLAS_API_URL": "https://backend.autonolas.tech"
+  }
+}

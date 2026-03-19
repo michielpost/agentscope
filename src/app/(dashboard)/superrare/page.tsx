@@ -26,7 +26,7 @@ export default function SuperRarePage() {
           <span className="text-violet-400">◆</span> SuperRare / Rare Protocol
         </h2>
         <p className="text-sm text-gray-400 mt-1">
-          AI-generated art — create, list, and sell on the premier NFT marketplace
+          Art created by your agent on Rare Protocol
         </p>
       </div>
 

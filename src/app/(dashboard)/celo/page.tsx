@@ -24,7 +24,7 @@ export default function CeloPage() {
         <h2 className="text-2xl font-bold text-white flex items-center gap-2">
           <span className="text-green-400">◉</span> Celo
         </h2>
-        <p className="text-sm text-gray-400 mt-1">Mobile-first L1 blockchain for real-world payments</p>
+        <p className="text-sm text-gray-400 mt-1">Transactions sent by your agent on Celo</p>
       </div>
 
       {/* Stats */}

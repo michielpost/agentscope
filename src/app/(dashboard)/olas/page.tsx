@@ -23,7 +23,7 @@ export default function OlasPage() {
           <span className="text-indigo-400">⬡</span> Olas / Pearl
         </h2>
         <p className="text-sm text-gray-400 mt-1">
-          Autonomous agent economy — deploy, stake, and coordinate AI services on-chain
+          Your agent's services on the Olas network
         </p>
       </div>
 

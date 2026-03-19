@@ -13,9 +13,27 @@ import {
   Heart,
   Cpu,
   Bot,
+  Fingerprint,
+  Activity,
 } from 'lucide-react'
 
 const navItems = [
+  {
+    href: '/agent-identity',
+    label: 'Agent Identity',
+    icon: Fingerprint,
+    color: 'text-amber-400',
+    activeColor: 'text-amber-300',
+    borderColor: 'border-amber-500',
+  },
+  {
+    href: '/activity',
+    label: 'Activity',
+    icon: Activity,
+    color: 'text-gray-300',
+    activeColor: 'text-white',
+    borderColor: 'border-white',
+  },
   {
     href: '/overview',
     label: 'Overview',
