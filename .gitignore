@@ -41,3 +41,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# contracts — ignore compiled artifacts and secrets
+contracts/node_modules/
+contracts/artifacts/
+contracts/cache/
+contracts/ignition/
+contracts/.env
