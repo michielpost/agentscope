@@ -16,7 +16,7 @@ import type {
 } from '@/types'
 
 // Base timestamp: ~June 2025
-const NOW = 1748908800
+const NOW = Math.floor(Date.now() / 1000)
 
 export const uniswapSwaps: UniswapSwap[] = [
   {
@@ -114,8 +114,8 @@ export const uniswapPositions: UniswapPosition[] = [
 export const celoTransactions: CeloTransaction[] = [
   {
     hash: '0xa1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2',
-    from: '0x742d35Cc6634C0532925a3b8D4C9bE6aF97b3',
-    to: '0x8Ba1f109551bD432803012645Ac136ddd64DBA7',
+    from: '0x92B143F46C3F8B4242bA85F800579cdF73882e98',
+    to: '0x8BaBf109551bD432803012645Ac136ddd64DBA72',
     value: '250.00',
     token: 'CELO',
     timestamp: NOW - 7200,
@@ -123,7 +123,7 @@ export const celoTransactions: CeloTransaction[] = [
   },
   {
     hash: '0xb2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3',
-    from: '0x742d35Cc6634C0532925a3b8D4C9bE6aF97b3',
+    from: '0x92B143F46C3F8B4242bA85F800579cdF73882e98',
     to: '0x3F4C12a6b789dD15d9C4fE6C9B7E8a3b1D2e4F5',
     value: '100.00',
     token: 'cUSD',
@@ -132,7 +132,7 @@ export const celoTransactions: CeloTransaction[] = [
   },
   {
     hash: '0xc3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4',
-    from: '0x742d35Cc6634C0532925a3b8D4C9bE6aF97b3',
+    from: '0x92B143F46C3F8B4242bA85F800579cdF73882e98',
     to: '0x1a2B3c4D5e6F7a8B9c0D1e2F3a4B5c6D7e8F9a0B',
     value: '50.00',
     token: 'cEUR',
@@ -142,7 +142,7 @@ export const celoTransactions: CeloTransaction[] = [
   {
     hash: '0xd4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5',
     from: '0x9B8C7D6E5F4A3B2C1D0E9F8A7B6C5D4E3F2A1B0',
-    to: '0x742d35Cc6634C0532925a3b8D4C9bE6aF97b3',
+    to: '0x92B143F46C3F8B4242bA85F800579cdF73882e98',
     value: '500.00',
     token: 'CELO',
     timestamp: NOW - 172800,
@@ -150,7 +150,7 @@ export const celoTransactions: CeloTransaction[] = [
   },
   {
     hash: '0xe5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6',
-    from: '0x742d35Cc6634C0532925a3b8D4C9bE6aF97b3',
+    from: '0x92B143F46C3F8B4242bA85F800579cdF73882e98',
     to: '0x5C6D7E8F9A0B1C2D3E4F5A6B7C8D9E0F1A2B3C4D',
     value: '75.50',
     token: 'cUSD',
@@ -159,7 +159,7 @@ export const celoTransactions: CeloTransaction[] = [
   },
   {
     hash: '0xf6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7',
-    from: '0x742d35Cc6634C0532925a3b8D4C9bE6aF97b3',
+    from: '0x92B143F46C3F8B4242bA85F800579cdF73882e98',
     to: '0x2D3E4F5A6B7C8D9E0F1A2B3C4D5E6F7A8B9C0D1',
     value: '1000.00',
     token: 'CELO',
@@ -169,7 +169,7 @@ export const celoTransactions: CeloTransaction[] = [
   {
     hash: '0xa7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8',
     from: '0x6E7F8A9B0C1D2E3F4A5B6C7D8E9F0A1B2C3D4E5',
-    to: '0x742d35Cc6634C0532925a3b8D4C9bE6aF97b3',
+    to: '0x92B143F46C3F8B4242bA85F800579cdF73882e98',
     value: '200.00',
     token: 'cUSD',
     timestamp: NOW - 604800,
@@ -187,10 +187,10 @@ export const celoBalances: CeloBalance[] = [
 export const delegations: Delegation[] = [
   {
     id: 'del-001',
-    delegate: '0xAgentBot1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6',
-    delegator: '0x742d35Cc6634C0532925a3b8D4C9bE6aF97b3',
-    caveats: ['allowedTargets: Uniswap V3 Router', 'nativeTokenTransferAmount: 0.5 ETH/day'],
-    authority: '0xroot',
+    delegate: '0x1F2a3B4C5D6E7F8A9B0c1D2E3f4A5b6C7D8e9F0a',
+    delegator: '0x92B143F46C3F8B4242bA85F800579cdF73882e98',
+    caveats: ['allowedTargets: Uniswap V3 Router 0xE592427A0AEce92De3Edee1F18E0157C05861564', 'nativeTokenTransferAmount: 0.5 ETH/day'],
+    authority: '0x0000000000000000000000000000000000000000',
     createdAt: NOW - 604800,
     active: true,
     spendLimit: '0.5',
@@ -198,10 +198,10 @@ export const delegations: Delegation[] = [
   },
   {
     id: 'del-002',
-    delegate: '0xBankrRelay3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e',
-    delegator: '0x742d35Cc6634C0532925a3b8D4C9bE6aF97b3',
+    delegate: '0x3C4d5E6f7A8b9C0D1e2F3a4B5c6D7e8F9A0b1C2d',
+    delegator: '0x92B143F46C3F8B4242bA85F800579cdF73882e98',
     caveats: ['allowedMethods: bankr.execute', 'valueLte: 100 USDC/request'],
-    authority: '0xroot',
+    authority: '0x0000000000000000000000000000000000000000',
     createdAt: NOW - 1209600,
     active: true,
     spendLimit: '500',
@@ -209,10 +209,10 @@ export const delegations: Delegation[] = [
   },
   {
     id: 'del-003',
-    delegate: '0xOlasService4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f',
-    delegator: '0x742d35Cc6634C0532925a3b8D4C9bE6aF97b3',
-    caveats: ['allowedTargets: Olas Registry', 'nativeTokenTransferAmount: 10 ETH/month'],
-    authority: '0xroot',
+    delegate: '0x4D5e6F7a8B9c0D1E2f3A4b5C6d7E8f9A0b1C2D3e',
+    delegator: '0x92B143F46C3F8B4242bA85F800579cdF73882e98',
+    caveats: ['allowedTargets: Olas Registry 0xE3607b00E75f6405248323A9417ff6b39B244b50', 'nativeTokenTransferAmount: 10 ETH/month'],
+    authority: '0x0000000000000000000000000000000000000000',
     createdAt: NOW - 2592000,
     active: true,
     spendLimit: '10',
@@ -220,10 +220,10 @@ export const delegations: Delegation[] = [
   },
   {
     id: 'del-004',
-    delegate: '0xSuperRareAgent5e6f7a8b9c0d1e2f3a4b5c6d7e8',
-    delegator: '0x742d35Cc6634C0532925a3b8D4C9bE6aF97b3',
-    caveats: ['allowedTargets: SuperRare Market', 'nativeTokenTransferAmount: 2 ETH/day'],
-    authority: '0xroot',
+    delegate: '0x5E6f7A8b9C0d1E2F3a4B5c6D7e8F9a0B1c2D3E4f',
+    delegator: '0x92B143F46C3F8B4242bA85F800579cdF73882e98',
+    caveats: ['allowedTargets: SuperRare Market 0x6D7923882aad385a5533e007D1B64d668B50e02B', 'nativeTokenTransferAmount: 2 ETH/day'],
+    authority: '0x0000000000000000000000000000000000000000',
     createdAt: NOW - 1728000,
     active: false,
     spendLimit: '2',
@@ -231,30 +231,33 @@ export const delegations: Delegation[] = [
   },
   {
     id: 'del-005',
-    delegate: '0xOctantVoter6f7a8b9c0d1e2f3a4b5c6d7e8f9a0',
-    delegator: '0x742d35Cc6634C0532925a3b8D4C9bE6aF97b3',
-    caveats: ['allowedTargets: Octant Vault', 'valueLte: 50 GLM/epoch'],
-    authority: '0xroot',
+    delegate: '0x6F7a8B9c0D1e2F3A4b5C6d7E8f9A0B1C2d3E4f5A',
+    delegator: '0x92B143F46C3F8B4242bA85F800579cdF73882e98',
+    caveats: ['allowedTargets: Octant Vault 0xf2730a6e5Cda58aD0Ef0bB6e5D0C3c3db5EaD05e', 'valueLte: 50 GLM/epoch'],
+    authority: '0x0000000000000000000000000000000000000000',
     createdAt: NOW - 864000,
     active: true,
     spendLimit: '50',
     spentSoFar: '50',
   },
 ]
-
-export const bankrUsage: BankrUsage[] = [
-  { date: '2025-06-25', model: 'gpt-4o', inputTokens: 12450, outputTokens: 3820, costUsd: 0.312 },
-  { date: '2025-06-25', model: 'claude-3-5-sonnet', inputTokens: 8900, outputTokens: 4100, costUsd: 0.287 },
-  { date: '2025-06-24', model: 'gpt-4o', inputTokens: 15230, outputTokens: 5640, costUsd: 0.421 },
-  { date: '2025-06-24', model: 'claude-3-5-sonnet', inputTokens: 6780, outputTokens: 2910, costUsd: 0.198 },
-  { date: '2025-06-23', model: 'gpt-4o-mini', inputTokens: 45600, outputTokens: 12300, costUsd: 0.089 },
-  { date: '2025-06-23', model: 'gpt-4o', inputTokens: 9100, outputTokens: 3200, costUsd: 0.245 },
-  { date: '2025-06-22', model: 'claude-3-5-sonnet', inputTokens: 11200, outputTokens: 4800, costUsd: 0.334 },
-  { date: '2025-06-22', model: 'gpt-4o-mini', inputTokens: 38900, outputTokens: 9400, costUsd: 0.071 },
-  { date: '2025-06-21', model: 'gpt-4o', inputTokens: 7800, outputTokens: 2900, costUsd: 0.198 },
-  { date: '2025-06-20', model: 'claude-3-5-sonnet', inputTokens: 13400, outputTokens: 5200, costUsd: 0.389 },
-]
-
+export const bankrUsage: BankrUsage[] = (() => {
+  const today = new Date()
+  const fmt = (d: Date) => d.toISOString().split('T')[0]
+  const daysAgo = (n: number) => { const d = new Date(today); d.setDate(d.getDate() - n); return fmt(d) }
+  return [
+    { date: daysAgo(0), model: 'claude-sonnet-4-6', inputTokens: 12450, outputTokens: 3820, costUsd: 0.312 },
+    { date: daysAgo(0), model: 'claude-haiku-4-5', inputTokens: 8900, outputTokens: 4100, costUsd: 0.087 },
+    { date: daysAgo(1), model: 'claude-sonnet-4-6', inputTokens: 15230, outputTokens: 5640, costUsd: 0.421 },
+    { date: daysAgo(1), model: 'gpt-5-mini', inputTokens: 6780, outputTokens: 2910, costUsd: 0.098 },
+    { date: daysAgo(2), model: 'gpt-5-mini', inputTokens: 45600, outputTokens: 12300, costUsd: 0.089 },
+    { date: daysAgo(2), model: 'claude-sonnet-4-6', inputTokens: 9100, outputTokens: 3200, costUsd: 0.245 },
+    { date: daysAgo(3), model: 'claude-sonnet-4-6', inputTokens: 11200, outputTokens: 4800, costUsd: 0.334 },
+    { date: daysAgo(3), model: 'gpt-5-mini', inputTokens: 38900, outputTokens: 9400, costUsd: 0.071 },
+    { date: daysAgo(4), model: 'claude-sonnet-4-6', inputTokens: 7800, outputTokens: 2900, costUsd: 0.198 },
+    { date: daysAgo(5), model: 'claude-sonnet-4-6', inputTokens: 13400, outputTokens: 5200, costUsd: 0.389 },
+  ]
+})()
 export const bankrLimits: BankrLimit[] = [
   { model: 'gpt-4o', dailyLimit: 5.00, used: 1.98, remaining: 3.02 },
   { model: 'claude-3-5-sonnet', dailyLimit: 5.00, used: 1.21, remaining: 3.79 },
@@ -463,7 +466,7 @@ export const olasServices: OlasService[] = [
     description: 'Multi-agent service for cross-protocol arbitrage detection and execution',
     agentCount: 3,
     state: 'DEPLOYED',
-    multisig: '0xDeF1a2B3c4D5e6F7a8B9c0D1e2F3a4B5c6D7e8F9',
+    multisig: '0xDeF1a2B3c4D5e6F7a8B9c0D1e2F3a4B5c6D7e8F9a',
   },
   {
     id: 'svc-027',
@@ -479,7 +482,7 @@ export const olasServices: OlasService[] = [
     description: 'Monitors cross-chain bridge health and liquidity across supported networks',
     agentCount: 4,
     state: 'PRE_REGISTRATION',
-    multisig: '0xBr1d2e3F4a5B6c7D8e9F0a1B2c3D4e5F6a7B8c9D',
+    multisig: '0xB11d2e3F4a5B6c7D8e9F0a1B2c3D4e5F6a7B8c9D',
   },
 ]
 
@@ -490,19 +493,18 @@ export const agentSummary: AgentSummary = {
   alerts: 1,
 }
 
-export const dailySpendData = [
-  { day: 'Jun 13', uniswap: 1.2, bankr: 0.3, olas: 0.5, other: 0.1 },
-  { day: 'Jun 14', uniswap: 0.8, bankr: 0.5, olas: 0.5, other: 0.2 },
-  { day: 'Jun 15', uniswap: 2.1, bankr: 0.4, olas: 0.5, other: 0.0 },
-  { day: 'Jun 16', uniswap: 1.5, bankr: 0.8, olas: 0.5, other: 0.3 },
-  { day: 'Jun 17', uniswap: 0.9, bankr: 0.6, olas: 1.0, other: 0.1 },
-  { day: 'Jun 18', uniswap: 3.2, bankr: 0.3, olas: 0.5, other: 0.0 },
-  { day: 'Jun 19', uniswap: 1.8, bankr: 0.7, olas: 0.5, other: 0.4 },
-  { day: 'Jun 20', uniswap: 2.4, bankr: 0.5, olas: 1.5, other: 0.2 },
-  { day: 'Jun 21', uniswap: 0.6, bankr: 0.4, olas: 0.5, other: 0.0 },
-  { day: 'Jun 22', uniswap: 1.1, bankr: 0.6, olas: 0.5, other: 0.1 },
-  { day: 'Jun 23', uniswap: 2.8, bankr: 0.5, olas: 0.5, other: 0.3 },
-  { day: 'Jun 24', uniswap: 1.4, bankr: 0.8, olas: 1.0, other: 0.2 },
-  { day: 'Jun 25', uniswap: 0.7, bankr: 0.6, olas: 0.5, other: 0.0 },
-  { day: 'Jun 26', uniswap: 1.9, bankr: 0.5, olas: 0.5, other: 0.1 },
-]
+export const dailySpendData = (() => {
+  const today = new Date()
+  return Array.from({ length: 14 }, (_, i) => {
+    const d = new Date(today)
+    d.setDate(d.getDate() - (13 - i))
+    const day = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+    return {
+      day,
+      uniswap: +(Math.random() * 2.5 + 0.5).toFixed(2),
+      bankr: +(Math.random() * 0.8 + 0.2).toFixed(2),
+      olas: +(Math.random() * 1.0 + 0.3).toFixed(2),
+      other: +(Math.random() * 0.4).toFixed(2),
+    }
+  })
+})()

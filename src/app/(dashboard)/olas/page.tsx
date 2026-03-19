@@ -20,11 +20,14 @@ export default function OlasPage() {
       {/* Header */}
       <div>
         <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-          <span className="text-indigo-400">⬡</span> Olas / Pearl
+          <span className="text-indigo-400">⬡</span> Olas
         </h2>
         <p className="text-sm text-gray-400 mt-1">
-          Your agent's services on the Olas network
+          Your agent&apos;s services on the Olas network
         </p>
+        <div className="mt-2 rounded-lg border border-amber-500/20 bg-amber-500/5 px-3 py-2 text-xs text-amber-400">
+          <strong>Note:</strong> Pearl desktop app integration is on the roadmap — it requires the official Pearl team integration process. Current data is sourced directly from the Olas registry API.
+        </div>
       </div>
 
       {/* Stats */}

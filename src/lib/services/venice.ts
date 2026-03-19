@@ -85,3 +85,63 @@ export function getVeniceStats(calls: VeniceInferenceCall[]) {
     allNoDataRetention: true,
   }
 }
+
+
+export interface VeniceAnalysisResult {
+  content: string
+  model: string
+  inputTokens: number
+  outputTokens: number
+  costVVV: number
+  costUsd: number
+  timestamp: number
+  noDataRetention: boolean
+}
+
+// Server-side only: real Venice inference call
+export async function callVeniceInference(
+  prompt: string,
+  model = 'llama-3.3-70b'
+): Promise<VeniceAnalysisResult> {
+  const apiKey = process.env.VENICE_API_KEY
+  if (!apiKey) throw new Error('VENICE_API_KEY not configured')
+
+  const res = await fetch(`${VENICE_API_BASE}/chat/completions`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify({
+      model,
+      messages: [{ role: 'user', content: prompt }],
+      max_tokens: 1024,
+      venice_parameters: { include_venice_system_prompt: false },
+    }),
+  })
+
+  if (!res.ok) {
+    const err = await res.text()
+    throw new Error(`Venice API error ${res.status}: ${err}`)
+  }
+
+  const data = await res.json()
+  const choice = data.choices?.[0]
+  const usage = data.usage ?? {}
+  const inputTok = usage.prompt_tokens ?? 0
+  const outputTok = usage.completion_tokens ?? 0
+  const totalTok = inputTok + outputTok
+  const costVVV = +(totalTok * 0.0000001).toFixed(6)
+  const costUsd = +(totalTok * 0.00000014).toFixed(4)
+
+  return {
+    content: choice?.message?.content ?? '',
+    model: data.model ?? model,
+    inputTokens: inputTok,
+    outputTokens: outputTok,
+    costVVV,
+    costUsd,
+    timestamp: Math.floor(Date.now() / 1000),
+    noDataRetention: true,
+  }
+}

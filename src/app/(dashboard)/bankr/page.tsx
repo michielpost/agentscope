@@ -1,5 +1,6 @@
 'use client'
-import { Brain, DollarSign, Cpu, BarChart2 } from 'lucide-react'
+import { useState, useCallback } from 'react'
+import { Brain, DollarSign, Cpu, BarChart2, Loader2 } from 'lucide-react'
 import { StatCard } from '@/components/ui/stat-card'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -9,6 +10,11 @@ import { useBankrUsage, useBankrLimits } from '@/hooks/useBankr'
 export default function BankrPage() {
   const { data: bankrUsage, loading: usageLoading } = useBankrUsage()
   const { data: bankrLimits, loading: limitsLoading } = useBankrLimits()
+  const [analysisLoading, setAnalysisLoading] = useState(false)
+  const [analysisResult, setAnalysisResult] = useState<{
+    content: string; model: string; inputTokens: number; outputTokens: number; costUsd: number
+  } | null>(null)
+  const [analysisError, setAnalysisError] = useState<string | null>(null)
 
   const totalCostToday = bankrUsage
     .filter((u) => u.date === new Date().toISOString().slice(0, 10))
@@ -21,6 +27,35 @@ export default function BankrPage() {
   const requestsToday = bankrUsage.filter(
     (u) => u.date === new Date().toISOString().slice(0, 10)
   ).length
+
+  const runAnalysis = useCallback(async () => {
+    setAnalysisLoading(true)
+    setAnalysisError(null)
+    setAnalysisResult(null)
+    try {
+      const res = await fetch('/api/bankr/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prompt: `You are analyzing an AI agent's LLM usage through the Bankr Gateway.
+Total tokens used: ${totalTokens.toLocaleString()}, across ${uniqueModels} models.
+Today's cost: $${totalCostToday.toFixed(3)}. Requests today: ${requestsToday}.
+Models used: ${[...new Set(bankrUsage.map(u => u.model))].join(', ')}.
+
+In 2-3 sentences, provide a brief assessment of this agent's LLM usage pattern 
+and any cost-optimization recommendations.`,
+          model: 'claude-sonnet-4-6',
+        }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error ?? 'API error')
+      setAnalysisResult(data)
+    } catch (e) {
+      setAnalysisError(e instanceof Error ? e.message : 'Unknown error')
+    } finally {
+      setAnalysisLoading(false)
+    }
+  }, [bankrUsage, totalTokens, uniqueModels, totalCostToday, requestsToday])
 
   return (
     <div className="space-y-6">
@@ -186,6 +221,55 @@ export default function BankrPage() {
           </Card>
         </div>
       </div>
+
+      {/* AI Analysis Section */}
+      <Card className="border-blue-500/20 bg-blue-500/5">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Brain size={18} className="text-blue-400" />
+            Analyze with Bankr LLM Gateway
+          </CardTitle>
+          <p className="text-sm text-gray-400 mt-1">
+            Route an analysis request through Bankr&apos;s multi-model AI gateway
+          </p>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <button
+            onClick={runAnalysis}
+            disabled={analysisLoading}
+            className="flex items-center gap-2 rounded-lg border border-blue-500/30 bg-blue-500/10 px-4 py-2 text-sm text-blue-300 hover:bg-blue-500/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {analysisLoading ? (
+              <><Loader2 size={14} className="animate-spin" /> Analyzing…</>
+            ) : (
+              <><Brain size={14} /> Analyze LLM Usage</>
+            )}
+          </button>
+
+          {analysisError && (
+            <div className="rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300">
+              Error: {analysisError}
+            </div>
+          )}
+
+          {analysisResult && (
+            <div className="rounded-lg border border-blue-500/20 bg-black/20 p-4 space-y-3">
+              <p className="text-sm text-gray-200 leading-relaxed">{analysisResult.content}</p>
+              <div className="flex flex-wrap gap-3 pt-2 border-t border-white/5">
+                <span className="text-xs text-gray-500">
+                  Model: <span className="text-blue-300 font-mono">{analysisResult.model}</span>
+                </span>
+                <span className="text-xs text-gray-500">
+                  Tokens: <span className="text-gray-300">{(analysisResult.inputTokens + analysisResult.outputTokens).toLocaleString()}</span>
+                </span>
+                <span className="text-xs text-gray-500">
+                  Cost: <span className="text-emerald-300">${analysisResult.costUsd.toFixed(4)}</span>
+                </span>
+              </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   )
 }

@@ -1,8 +1,9 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { Shield, Lock, Brain, Zap, ExternalLink } from 'lucide-react'
+import { useState, useEffect, useCallback } from 'react'
+import { Shield, Lock, Brain, Zap, ExternalLink, Loader2 } from 'lucide-react'
 import { StatCard } from '@/components/ui/stat-card'
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import {
   getMockInferenceHistory,
   getVeniceModels,
@@ -41,9 +42,43 @@ function formatContext(ctx?: number): string {
 export default function VenicePage() {
   const [models, setModels] = useState<VeniceModel[]>([])
   const [modelsLoading, setModelsLoading] = useState(true)
+  const [analysisLoading, setAnalysisLoading] = useState(false)
+  const [analysisResult, setAnalysisResult] = useState<{
+    content: string; model: string; inputTokens: number; outputTokens: number; costVVV: number; costUsd: number
+  } | null>(null)
+  const [analysisError, setAnalysisError] = useState<string | null>(null)
 
   const history: VeniceInferenceCall[] = getMockInferenceHistory()
   const stats = getVeniceStats(history)
+
+  const runAnalysis = useCallback(async () => {
+    setAnalysisLoading(true)
+    setAnalysisError(null)
+    setAnalysisResult(null)
+    try {
+      const res = await fetch('/api/venice/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prompt: `You are analyzing an AI agent's activity on Venice's private inference network. 
+The agent has made ${stats.totalCalls} inference calls with ${stats.totalTokens.toLocaleString()} total tokens, 
+costing ${stats.totalCostVVV.toFixed(4)} VVV ($${stats.totalCostUsd.toFixed(2)} USD).
+${stats.webSearchCalls} calls used web search. All calls had no-data-retention enabled.
+
+In 2-3 sentences, provide a brief assessment of this agent's Venice inference usage pattern 
+and any efficiency recommendations.`,
+          model: 'llama-3.3-70b',
+        }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error ?? 'API error')
+      setAnalysisResult(data)
+    } catch (e) {
+      setAnalysisError(e instanceof Error ? e.message : 'Unknown error')
+    } finally {
+      setAnalysisLoading(false)
+    }
+  }, [stats])
 
   useEffect(() => {
     getVeniceModels().then((m) => {
@@ -231,6 +266,64 @@ export default function VenicePage() {
           </div>
         </div>
       </div>
+
+      {/* AI Analysis Section */}
+      <Card className="border-purple-500/20 bg-purple-500/5">
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <CardTitle className="flex items-center gap-2">
+              <Brain size={18} className="text-purple-400" />
+              Analyze Agent Activity with Venice
+            </CardTitle>
+            <span className="inline-flex items-center rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 text-[10px] font-medium text-emerald-400">
+              🔒 No Data Retention
+            </span>
+          </div>
+          <p className="text-sm text-gray-400 mt-1">
+            Send your agent&apos;s activity summary to Venice for private AI analysis
+          </p>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <button
+            onClick={runAnalysis}
+            disabled={analysisLoading}
+            className="flex items-center gap-2 rounded-lg border border-purple-500/30 bg-purple-500/10 px-4 py-2 text-sm text-purple-300 hover:bg-purple-500/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {analysisLoading ? (
+              <><Loader2 size={14} className="animate-spin" /> Analyzing…</>
+            ) : (
+              <><Brain size={14} /> Analyze Agent Activity</>
+            )}
+          </button>
+
+          {analysisError && (
+            <div className="rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300">
+              Error: {analysisError}
+            </div>
+          )}
+
+          {analysisResult && (
+            <div className="rounded-lg border border-purple-500/20 bg-black/20 p-4 space-y-3">
+              <p className="text-sm text-gray-200 leading-relaxed">{analysisResult.content}</p>
+              <div className="flex flex-wrap gap-3 pt-2 border-t border-white/5">
+                <span className="text-xs text-gray-500">
+                  Model: <span className="text-purple-300 font-mono">{analysisResult.model}</span>
+                </span>
+                <span className="text-xs text-gray-500">
+                  Tokens: <span className="text-gray-300">{(analysisResult.inputTokens + analysisResult.outputTokens).toLocaleString()}</span>
+                </span>
+                <span className="text-xs text-gray-500">
+                  Cost: <span className="text-purple-300">{analysisResult.costVVV.toFixed(6)} VVV</span>
+                  <span className="text-gray-600 ml-1">(${analysisResult.costUsd.toFixed(4)})</span>
+                </span>
+                <span className="inline-flex items-center gap-1 text-[10px] text-emerald-400 border border-emerald-500/30 bg-emerald-500/10 rounded-full px-2 py-0.5">
+                  🔒 No Data Retention
+                </span>
+              </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   )
 }

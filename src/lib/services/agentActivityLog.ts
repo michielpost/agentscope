@@ -20,7 +20,7 @@ export const AGENT_ACTIVITY_LOG_ABI = [
     type: 'event',
     name: 'AgentRegistered',
     inputs: [
-      { name: 'agentAddress', type: 'address', indexed: true },
+      { name: 'agent', type: 'address', indexed: true },
       { name: 'name', type: 'string', indexed: false },
       { name: 'agentType', type: 'string', indexed: false },
       { name: 'timestamp', type: 'uint256', indexed: false },
@@ -30,10 +30,10 @@ export const AGENT_ACTIVITY_LOG_ABI = [
     type: 'event',
     name: 'ActivityLogged',
     inputs: [
-      { name: 'agentAddress', type: 'address', indexed: true },
+      { name: 'agent', type: 'address', indexed: true },
       { name: 'protocol', type: 'string', indexed: false },
       { name: 'action', type: 'string', indexed: false },
-      { name: 'description', type: 'string', indexed: false },
+      { name: 'detail', type: 'string', indexed: false },
       { name: 'timestamp', type: 'uint256', indexed: false },
     ],
   },
@@ -54,47 +54,23 @@ export const AGENT_ACTIVITY_LOG_ABI = [
     inputs: [
       { name: 'protocol', type: 'string' },
       { name: 'action', type: 'string' },
-      { name: 'description', type: 'string' },
+      { name: 'detail', type: 'string' },
     ],
     outputs: [],
   },
   {
     type: 'function',
-    name: 'getAgentInfo',
+    name: 'getActivities',
     stateMutability: 'view',
-    inputs: [{ name: 'agentAddress', type: 'address' }],
-    outputs: [
-      {
-        name: '',
-        type: 'tuple',
-        components: [
-          { name: 'agentAddress', type: 'address' },
-          { name: 'name', type: 'string' },
-          { name: 'agentType', type: 'string' },
-          { name: 'registeredAt', type: 'uint256' },
-          { name: 'activityCount', type: 'uint256' },
-        ],
-      },
-    ],
-  },
-  {
-    type: 'function',
-    name: 'getAgentActivities',
-    stateMutability: 'view',
-    inputs: [
-      { name: 'agentAddress', type: 'address' },
-      { name: 'offset', type: 'uint256' },
-      { name: 'limit', type: 'uint256' },
-    ],
+    inputs: [{ name: 'agent', type: 'address' }],
     outputs: [
       {
         name: '',
         type: 'tuple[]',
         components: [
-          { name: 'agentAddress', type: 'address' },
           { name: 'protocol', type: 'string' },
           { name: 'action', type: 'string' },
-          { name: 'description', type: 'string' },
+          { name: 'detail', type: 'string' },
           { name: 'timestamp', type: 'uint256' },
         ],
       },
@@ -102,17 +78,51 @@ export const AGENT_ACTIVITY_LOG_ABI = [
   },
   {
     type: 'function',
-    name: 'getTotalAgents',
+    name: 'getRecentActivities',
+    stateMutability: 'view',
+    inputs: [
+      { name: 'agent', type: 'address' },
+      { name: 'count', type: 'uint256' },
+    ],
+    outputs: [
+      {
+        name: '',
+        type: 'tuple[]',
+        components: [
+          { name: 'protocol', type: 'string' },
+          { name: 'action', type: 'string' },
+          { name: 'detail', type: 'string' },
+          { name: 'timestamp', type: 'uint256' },
+        ],
+      },
+    ],
+  },
+  {
+    type: 'function',
+    name: 'getAgentCount',
     stateMutability: 'view',
     inputs: [],
     outputs: [{ name: '', type: 'uint256' }],
   },
   {
     type: 'function',
-    name: 'getTotalActivities',
+    name: 'isRegistered',
     stateMutability: 'view',
-    inputs: [],
-    outputs: [{ name: '', type: 'uint256' }],
+    inputs: [{ name: 'agent', type: 'address' }],
+    outputs: [{ name: '', type: 'bool' }],
+  },
+  {
+    type: 'function',
+    name: 'agents',
+    stateMutability: 'view',
+    inputs: [{ name: '', type: 'address' }],
+    outputs: [
+      { name: 'name', type: 'string' },
+      { name: 'agentType', type: 'string' },
+      { name: 'registered', type: 'bool' },
+      { name: 'registeredAt', type: 'uint256' },
+      { name: 'activityCount', type: 'uint256' },
+    ],
   },
 ] as const
 
@@ -131,6 +141,9 @@ export interface OnChainActivity {
   blockNumber: bigint
 }
 
+// Deployer wallet — the address that deployed the contract and logged activities
+export const DEPLOYER_ADDRESS = '0xcA2595662b00aEA6cFd1Ff3A6EC65aBafbc5EEC8' as const
+
 function getClient() {
   return createPublicClient({
     chain: celoSepolia,
@@ -140,21 +153,29 @@ function getClient() {
 
 export async function getContractStats(): Promise<ContractStats> {
   const client = getClient()
-  const [totalAgents, totalActivities] = await Promise.all([
-    client.readContract({
+  const totalAgents = await client.readContract({
+    address: AGENT_ACTIVITY_LOG_ADDRESS,
+    abi: AGENT_ACTIVITY_LOG_ABI,
+    functionName: 'getAgentCount',
+  })
+
+  // Get activity count from the deployer's agent record
+  let totalActivities = 0
+  try {
+    const agentInfo = await client.readContract({
       address: AGENT_ACTIVITY_LOG_ADDRESS,
       abi: AGENT_ACTIVITY_LOG_ABI,
-      functionName: 'getTotalAgents',
-    }),
-    client.readContract({
-      address: AGENT_ACTIVITY_LOG_ADDRESS,
-      abi: AGENT_ACTIVITY_LOG_ABI,
-      functionName: 'getTotalActivities',
-    }),
-  ])
+      functionName: 'agents',
+      args: [DEPLOYER_ADDRESS],
+    })
+    totalActivities = Number(agentInfo[4]) // activityCount
+  } catch {
+    // contract may be empty
+  }
+
   return {
     totalAgents: Number(totalAgents),
-    totalActivities: Number(totalActivities),
+    totalActivities,
   }
 }
 
@@ -174,10 +195,10 @@ export async function getRecentActivities(limit = 10): Promise<OnChainActivity[]
     .slice(-limit)
     .reverse()
     .map((log) => ({
-      agentAddress: log.args.agentAddress as string,
+      agentAddress: log.args.agent as string,
       protocol: log.args.protocol as string,
       action: log.args.action as string,
-      description: log.args.description as string,
+      description: log.args.detail as string,
       timestamp: Number(log.args.timestamp ?? 0),
       transactionHash: log.transactionHash ?? '',
       blockNumber: log.blockNumber ?? BigInt(0),
