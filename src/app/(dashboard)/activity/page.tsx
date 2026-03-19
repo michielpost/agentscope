@@ -1,20 +1,21 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import { ExternalLink } from 'lucide-react'
+import { ExternalLink, CheckCircle2 } from 'lucide-react'
 import { agentActivities } from '@/lib/mock-data-activity'
 import { formatTimeAgo } from '@/lib/utils'
 
-type Protocol = 'all' | 'uniswap' | 'celo' | 'metamask' | 'bankr' | 'superrare' | 'octant' | 'olas'
+type Protocol = 'all' | 'uniswap' | 'celo' | 'metamask' | 'bankr' | 'superrare' | 'octant' | 'olas' | 'settlement'
 
 const PROTOCOL_STYLES: Record<string, { label: string; dot: string; text: string; activeBg: string; activeBorder: string }> = {
-  uniswap:   { label: 'Uniswap',   dot: 'bg-pink-500',   text: 'text-pink-400',   activeBg: 'bg-pink-500/20',   activeBorder: 'border-pink-500' },
-  celo:      { label: 'Celo',      dot: 'bg-green-500',  text: 'text-green-400',  activeBg: 'bg-green-500/20',  activeBorder: 'border-green-500' },
-  metamask:  { label: 'MetaMask',  dot: 'bg-orange-500', text: 'text-orange-400', activeBg: 'bg-orange-500/20', activeBorder: 'border-orange-500' },
-  bankr:     { label: 'Bankr',     dot: 'bg-blue-500',   text: 'text-blue-400',   activeBg: 'bg-blue-500/20',   activeBorder: 'border-blue-500' },
-  superrare: { label: 'SuperRare', dot: 'bg-violet-500', text: 'text-violet-400', activeBg: 'bg-violet-500/20', activeBorder: 'border-violet-500' },
-  octant:    { label: 'Octant',    dot: 'bg-teal-500',   text: 'text-teal-400',   activeBg: 'bg-teal-500/20',   activeBorder: 'border-teal-500' },
-  olas:      { label: 'Olas',      dot: 'bg-indigo-500', text: 'text-indigo-400', activeBg: 'bg-indigo-500/20', activeBorder: 'border-indigo-500' },
+  uniswap:    { label: 'Uniswap',    dot: 'bg-pink-500',   text: 'text-pink-400',   activeBg: 'bg-pink-500/20',   activeBorder: 'border-pink-500' },
+  celo:       { label: 'Celo',       dot: 'bg-green-500',  text: 'text-green-400',  activeBg: 'bg-green-500/20',  activeBorder: 'border-green-500' },
+  metamask:   { label: 'MetaMask',   dot: 'bg-orange-500', text: 'text-orange-400', activeBg: 'bg-orange-500/20', activeBorder: 'border-orange-500' },
+  bankr:      { label: 'Bankr',      dot: 'bg-blue-500',   text: 'text-blue-400',   activeBg: 'bg-blue-500/20',   activeBorder: 'border-blue-500' },
+  superrare:  { label: 'SuperRare',  dot: 'bg-violet-500', text: 'text-violet-400', activeBg: 'bg-violet-500/20', activeBorder: 'border-violet-500' },
+  octant:     { label: 'Octant',     dot: 'bg-teal-500',   text: 'text-teal-400',   activeBg: 'bg-teal-500/20',   activeBorder: 'border-teal-500' },
+  olas:       { label: 'Olas',       dot: 'bg-indigo-500', text: 'text-indigo-400', activeBg: 'bg-indigo-500/20', activeBorder: 'border-indigo-500' },
+  settlement: { label: 'Settlement', dot: 'bg-cyan-500',   text: 'text-cyan-400',   activeBg: 'bg-cyan-500/20',   activeBorder: 'border-cyan-500' },
 }
 
 const STATUS_STYLES = {
@@ -32,6 +33,7 @@ const FILTERS: { value: Protocol; label: string }[] = [
   { value: 'superrare', label: 'SuperRare' },
   { value: 'octant', label: 'Octant' },
   { value: 'olas', label: 'Olas' },
+  { value: 'settlement', label: 'Settlement' },
 ]
 
 function truncateTxHash(hash: string) {
@@ -65,6 +67,19 @@ export default function ActivityPage() {
       <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 px-4 py-3">
         <span className="text-sm text-gray-400">Total cost last 14 days: </span>
         <span className="text-sm font-semibold text-emerald-400">${totalCost.toFixed(2)}</span>
+      </div>
+
+      {/* Settlement Receipts callout */}
+      <div className="rounded-lg border border-cyan-500/20 bg-cyan-500/5 px-4 py-3">
+        <div className="flex items-start gap-3">
+          <CheckCircle2 size={16} className="text-cyan-400 mt-0.5 shrink-0" />
+          <div>
+            <p className="text-sm font-medium text-cyan-300">Settlement Receipts</p>
+            <p className="text-xs text-gray-400 mt-0.5">
+              On-chain proof chains for verified work delivery. Each settlement shows the full PactCreated → WorkSubmitted → PactApproved lifecycle — distinguishing verified payments from bare token transfers.
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* Filter pills */}
@@ -110,6 +125,11 @@ export default function ActivityPage() {
                         >
                           {activity.status}
                         </span>
+                        {activity.settlementType && (
+                          <span className="inline-flex items-center rounded-full border border-cyan-500/30 bg-cyan-500/10 px-2 py-0.5 text-[10px] font-medium text-cyan-400 font-mono">
+                            {activity.settlementType}
+                          </span>
+                        )}
                       </div>
                       <p className="text-sm font-medium text-gray-200">{activity.action}</p>
                       <p className="text-xs text-gray-500 mt-0.5">{activity.detail}</p>
@@ -117,7 +137,9 @@ export default function ActivityPage() {
                         <span className="text-xs text-gray-600">{formatTimeAgo(activity.timestamp)}</span>
                         {activity.txHash && (
                           <a
-                            href={`https://etherscan.io/tx/${activity.txHash}`}
+                            href={activity.protocol === 'settlement'
+                              ? `https://arbiscan.io/tx/${activity.txHash}`
+                              : `https://etherscan.io/tx/${activity.txHash}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="flex items-center gap-1 text-xs text-gray-500 hover:text-gray-300 transition-colors font-mono"

@@ -1,4 +1,4 @@
-import { Fingerprint, CheckCircle2, ExternalLink, Shield, Activity, Database, Zap } from 'lucide-react'
+import { Fingerprint, CheckCircle2, ExternalLink, Shield, Activity, Database, Zap, AlertTriangle } from 'lucide-react'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { AGENT_IDENTITY } from '@/lib/services/erc8004'
@@ -97,6 +97,67 @@ export default function AgentIdentityPage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Identity Verification Model */}
+      <Card className="border-blue-500/20 bg-blue-500/5">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Shield size={18} className="text-blue-400" />
+            Identity Verification Model
+          </CardTitle>
+          <p className="text-sm text-gray-400 mt-1">How AgentScope links your ERC-8004 identity to cross-protocol activity</p>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="rounded-lg border border-white/10 bg-white/[0.03] p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <CheckCircle2 size={14} className="text-emerald-400" />
+              <span className="text-sm font-medium text-white">Current: Wallet Address Correlation</span>
+              <span className="text-xs text-emerald-400 border border-emerald-500/30 rounded px-1.5 py-0.5">Active</span>
+            </div>
+            <p className="text-xs text-gray-400">All 7 protocol queries are filtered by the same wallet address. If your agent holds the ERC-8004 identity and uses the same key for all protocol interactions, this provides a consistent unified view.</p>
+          </div>
+          <div className="rounded-lg border border-yellow-500/20 bg-yellow-500/5 p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <AlertTriangle size={14} className="text-yellow-400" />
+              <span className="text-sm font-medium text-yellow-300">Known Limitation: Key Delegation Breaks Correlation</span>
+            </div>
+            <p className="text-xs text-gray-400">If your agent uses sub-keys, ERC-7710/7715 delegations, or different execution contexts per protocol, wallet address correlation will miss those transactions. The ERC-8004 anchor gives you identity — but not automatic cryptographic proof that the same entity executed every downstream action.</p>
+          </div>
+          <div>
+            <p className="text-xs font-medium text-gray-400 uppercase tracking-wider mb-2">Verification Roadmap</p>
+            <div className="space-y-2">
+              {[
+                { label: 'Address correlation', desc: 'Same wallet address = same agent', status: 'done' as const },
+                { label: 'ERC-7710/7715 delegation graphs', desc: 'Trace delegated keys back to root identity', status: 'next' as const },
+                { label: 'BBS+ selective disclosure', desc: 'Prove attribute membership without revealing execution details', status: 'future' as const },
+                { label: 'ZK proof linking', desc: 'Cryptographically bind ERC-8004 identity to tx signatures across all protocols', status: 'future' as const },
+              ].map((step) => (
+                <div key={step.label} className="flex items-start gap-3">
+                  <div className={`mt-0.5 h-4 w-4 rounded-full border flex items-center justify-center shrink-0 ${
+                    step.status === 'done' ? 'bg-emerald-500/20 border-emerald-500/50' :
+                    step.status === 'next' ? 'bg-blue-500/20 border-blue-500/50' :
+                    'bg-white/5 border-white/20'
+                  }`}>
+                    {step.status === 'done' && <CheckCircle2 size={10} className="text-emerald-400" />}
+                    {step.status === 'next' && <div className="h-1.5 w-1.5 rounded-full bg-blue-400" />}
+                  </div>
+                  <div>
+                    <p className="text-xs font-medium text-gray-200">{step.label}</p>
+                    <p className="text-xs text-gray-500">{step.desc}</p>
+                  </div>
+                  <span className={`ml-auto shrink-0 text-[10px] rounded px-1.5 py-0.5 border ${
+                    step.status === 'done' ? 'text-emerald-400 border-emerald-500/30 bg-emerald-500/10' :
+                    step.status === 'next' ? 'text-blue-400 border-blue-500/30 bg-blue-500/10' :
+                    'text-gray-500 border-white/10 bg-white/5'
+                  }`}>
+                    {step.status === 'done' ? 'Live' : step.status === 'next' ? 'Next' : 'Planned'}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Permissions & Delegation */}
       <Card>

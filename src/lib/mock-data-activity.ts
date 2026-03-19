@@ -1,12 +1,13 @@
 export interface AgentActivity {
   id: string
-  protocol: 'uniswap' | 'celo' | 'metamask' | 'bankr' | 'superrare' | 'octant' | 'olas'
+  protocol: 'uniswap' | 'celo' | 'metamask' | 'bankr' | 'superrare' | 'octant' | 'olas' | 'settlement'
   action: string
   detail: string
   timestamp: number
   txHash?: string
   status: 'completed' | 'pending' | 'failed'
   costUsd?: number
+  settlementType?: 'PactCreated' | 'WorkSubmitted' | 'PactApproved'
 }
 
 const NOW = 1748908800
@@ -219,5 +220,38 @@ export const agentActivities: AgentActivity[] = [
     detail: 'Bankr: 100 USDC/request inference spend via ERC-7710',
     timestamp: NOW - 1209600,
     status: 'completed',
+  },
+  {
+    id: 'act-023',
+    protocol: 'settlement',
+    action: 'Pact created',
+    settlementType: 'PactCreated',
+    detail: '200 PACT locked in escrow · Work: "Analyze market trends report"',
+    timestamp: NOW - 28800,
+    txHash: '0xf3a4b5c6d7e8f3a4b5c6d7e8f3a4b5c6d7e8f3a4b5c6d7e8f3a4b5c6d7e8f3a4',
+    status: 'completed',
+    costUsd: 1.20,
+  },
+  {
+    id: 'act-024',
+    protocol: 'settlement',
+    action: 'Work proof submitted',
+    settlementType: 'WorkSubmitted',
+    detail: 'SHA256: 0x7f4a...c821 · Delivery hash committed on-chain',
+    timestamp: NOW - 14400,
+    txHash: '0xe5f6a7b8c9d0e5f6a7b8c9d0e5f6a7b8c9d0e5f6a7b8c9d0e5f6a7b8c9d0e5f6',
+    status: 'completed',
+    costUsd: 0.05,
+  },
+  {
+    id: 'act-025',
+    protocol: 'settlement',
+    action: 'Pact approved — payment released',
+    settlementType: 'PactApproved',
+    detail: '200 PACT released to worker · Settlement complete in 41 min',
+    timestamp: NOW - 1200,
+    txHash: '0xd4e5f6a7b8c9d4e5f6a7b8c9d4e5f6a7b8c9d4e5f6a7b8c9d4e5f6a7b8c9d4e5',
+    status: 'completed',
+    costUsd: 0.08,
   },
 ]
