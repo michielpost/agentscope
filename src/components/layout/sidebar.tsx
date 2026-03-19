@@ -19,6 +19,8 @@ import {
   Lock,
 } from 'lucide-react'
 
+
+
 const navItems = [
   {
     href: '/agent-identity',
@@ -101,14 +103,6 @@ const navItems = [
     borderColor: 'border-indigo-500',
   },
   {
-    href: '/arbitrum',
-    label: 'Arbitrum',
-    icon: Layers,
-    color: 'text-sky-400',
-    activeColor: 'text-sky-300',
-    borderColor: 'border-sky-500',
-  },
-  {
     href: '/venice',
     label: 'Venice',
     icon: Lock,
@@ -167,9 +161,6 @@ export function Sidebar() {
                 className={isActive ? item.activeColor : item.color}
               />
               {item.label}
-              {item.href === '/arbitrum' && (
-                <span className="ml-auto h-1.5 w-1.5 rounded-full bg-yellow-400" />
-              )}
             </Link>
           )
         })}
