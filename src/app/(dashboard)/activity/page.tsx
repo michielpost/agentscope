@@ -5,7 +5,7 @@ import { ExternalLink, CheckCircle2 } from 'lucide-react'
 import { agentActivities } from '@/lib/mock-data-activity'
 import { formatTimeAgo } from '@/lib/utils'
 
-type Protocol = 'all' | 'uniswap' | 'celo' | 'metamask' | 'bankr' | 'superrare' | 'octant' | 'olas' | 'settlement'
+type Protocol = 'all' | 'uniswap' | 'celo' | 'metamask' | 'bankr' | 'superrare' | 'octant' | 'olas' | 'settlement' | 'venice' | 'base'
 
 const PROTOCOL_STYLES: Record<string, { label: string; dot: string; text: string; activeBg: string; activeBorder: string }> = {
   uniswap:    { label: 'Uniswap',    dot: 'bg-pink-500',   text: 'text-pink-400',   activeBg: 'bg-pink-500/20',   activeBorder: 'border-pink-500' },
@@ -16,6 +16,8 @@ const PROTOCOL_STYLES: Record<string, { label: string; dot: string; text: string
   octant:     { label: 'Octant',     dot: 'bg-teal-500',   text: 'text-teal-400',   activeBg: 'bg-teal-500/20',   activeBorder: 'border-teal-500' },
   olas:       { label: 'Olas',       dot: 'bg-indigo-500', text: 'text-indigo-400', activeBg: 'bg-indigo-500/20', activeBorder: 'border-indigo-500' },
   settlement: { label: 'Settlement', dot: 'bg-cyan-500',   text: 'text-cyan-400',   activeBg: 'bg-cyan-500/20',   activeBorder: 'border-cyan-500' },
+  venice:     { label: 'Venice',     dot: 'bg-purple-500', text: 'text-purple-400', activeBg: 'bg-purple-500/20', activeBorder: 'border-purple-500' },
+  base:       { label: 'Base',       dot: 'bg-sky-500',    text: 'text-sky-400',    activeBg: 'bg-sky-500/20',    activeBorder: 'border-sky-500' },
 }
 
 const STATUS_STYLES = {
@@ -34,6 +36,8 @@ const FILTERS: { value: Protocol; label: string }[] = [
   { value: 'octant', label: 'Octant' },
   { value: 'olas', label: 'Olas' },
   { value: 'settlement', label: 'Settlement' },
+  { value: 'venice', label: 'Venice' },
+  { value: 'base', label: 'Base' },
 ]
 
 function truncateTxHash(hash: string) {

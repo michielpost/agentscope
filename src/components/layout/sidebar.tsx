@@ -16,6 +16,7 @@ import {
   Fingerprint,
   Activity,
   Layers,
+  Lock,
 } from 'lucide-react'
 
 const navItems = [
@@ -106,6 +107,22 @@ const navItems = [
     color: 'text-sky-400',
     activeColor: 'text-sky-300',
     borderColor: 'border-sky-500',
+  },
+  {
+    href: '/venice',
+    label: 'Venice',
+    icon: Lock,
+    color: 'text-purple-400',
+    activeColor: 'text-purple-300',
+    borderColor: 'border-purple-500',
+  },
+  {
+    href: '/base',
+    label: 'Base',
+    icon: Layers,
+    color: 'text-blue-400',
+    activeColor: 'text-blue-300',
+    borderColor: 'border-blue-500',
   },
 ]
 

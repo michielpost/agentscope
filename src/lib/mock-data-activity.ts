@@ -1,6 +1,6 @@
 export interface AgentActivity {
   id: string
-  protocol: 'uniswap' | 'celo' | 'metamask' | 'bankr' | 'superrare' | 'octant' | 'olas' | 'settlement'
+  protocol: 'uniswap' | 'celo' | 'metamask' | 'bankr' | 'superrare' | 'octant' | 'olas' | 'settlement' | 'venice' | 'base'
   action: string
   detail: string
   timestamp: number
@@ -253,5 +253,43 @@ export const agentActivities: AgentActivity[] = [
     txHash: '0xd4e5f6a7b8c9d4e5f6a7b8c9d4e5f6a7b8c9d4e5f6a7b8c9d4e5f6a7b8c9d4e5',
     status: 'completed',
     costUsd: 0.08,
+  },
+  {
+    id: 'act-026',
+    protocol: 'venice',
+    action: 'Private inference',
+    detail: 'llama-3.3-70b · 2,130 tokens · Private governance analysis',
+    timestamp: NOW - 10800,
+    status: 'completed',
+    costUsd: 0.38,
+  },
+  {
+    id: 'act-027',
+    protocol: 'venice',
+    action: 'Private inference',
+    detail: 'deepseek-r1-671b · 9,300 tokens · Smart contract risk audit',
+    timestamp: NOW - 43200,
+    status: 'completed',
+    costUsd: 1.24,
+  },
+  {
+    id: 'act-028',
+    protocol: 'base',
+    action: 'x402 payment',
+    detail: 'x402 payment · Venice inference · 0.38 USDC on Base',
+    timestamp: NOW - 3600,
+    txHash: '0xaa1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b',
+    status: 'completed',
+    costUsd: 0.38,
+  },
+  {
+    id: 'act-029',
+    protocol: 'base',
+    action: 'x402 payment',
+    detail: 'x402 payment · AgentScope Feed · 0.10 USDC on Base',
+    timestamp: NOW - 14400,
+    txHash: '0xcc3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d',
+    status: 'completed',
+    costUsd: 0.10,
   },
 ]
