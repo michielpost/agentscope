@@ -124,7 +124,7 @@ export const celoTransactions: CeloTransaction[] = [
   {
     hash: '0xb2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3',
     from: '0x92B143F46C3F8B4242bA85F800579cdF73882e98',
-    to: '0x3F4C12a6b789dD15d9C4fE6C9B7E8a3b1D2e4F5',
+    to: '0x3F4C12a6b789dD15d9C4fE6C9B7E8a3b1D2e4F50',
     value: '100.00',
     token: 'cUSD',
     timestamp: NOW - 28800,
@@ -466,7 +466,7 @@ export const olasServices: OlasService[] = [
     description: 'Multi-agent service for cross-protocol arbitrage detection and execution',
     agentCount: 3,
     state: 'DEPLOYED',
-    multisig: '0xDeF1a2B3c4D5e6F7a8B9c0D1e2F3a4B5c6D7e8F9a',
+    multisig: '0xDeF1a2B3c4D5e6F7a8B9c0D1e2F3a4B5c6D7e8F9',
   },
   {
     id: 'svc-027',

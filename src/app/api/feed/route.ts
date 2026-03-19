@@ -1,10 +1,20 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
+import { withX402, x402ResourceServer } from '@x402/next'
+import { HTTPFacilitatorClient } from '@x402/core/server'
+import { ExactEvmScheme } from '@x402/evm/exact/server'
 import { getContractStats, getRecentActivities } from '@/lib/services/agentActivityLog'
 
-// This endpoint is designed to be monetizable via x402.
-// Currently returns real agent activity data.
-// x402 payment middleware can be layered on top.
-export async function GET() {
+const OPERATOR_WALLET = '0x92B143F46C3F8B4242bA85F800579cdF73882e98'
+const BASE_NETWORK = 'eip155:8453'
+const FACILITATOR_URL = 'https://x402.org/facilitator'
+
+const facilitator = new HTTPFacilitatorClient({ url: FACILITATOR_URL })
+const server = new x402ResourceServer(facilitator).register(
+  BASE_NETWORK,
+  new ExactEvmScheme()
+)
+
+async function feedHandler(_req: NextRequest): Promise<NextResponse> {
   try {
     const [stats, activities] = await Promise.all([
       getContractStats(),
@@ -18,14 +28,22 @@ export async function GET() {
       stats,
       recentActivities: activities,
       timestamp: new Date().toISOString(),
-      x402: {
-        price: '0.001 USDC',
-        network: 'Base',
-        description: 'Real-time agent activity feed across 9 Web3 protocols',
-      },
     })
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : 'Feed unavailable'
     return NextResponse.json({ error: message }, { status: 500 })
   }
 }
+
+export const GET = withX402(
+  feedHandler,
+  {
+    accepts: {
+      scheme: 'exact',
+      payTo: OPERATOR_WALLET as `0x${string}`,
+      price: '$0.001',
+      network: BASE_NETWORK,
+    },
+  },
+  server
+)
