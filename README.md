@@ -40,6 +40,20 @@ See `.env.example` for all required and optional variables.
 
 All other integrations use public endpoints — no key needed.
 
+## Smart Contract
+
+**AgentActivityLog** is deployed on Celo Sepolia Testnet. It registers AI agents on-chain and logs their protocol activity as immutable events.
+
+| Field | Value |
+|-------|-------|
+| Contract | `AgentActivityLog` |
+| Network | Celo Sepolia (chain ID 11142220) |
+| Address | [`0xa9eC3f9410F8E478Ae96eBe65dfc59674D620348`](https://celo-sepolia.blockscout.com/address/0xa9eC3f9410F8E478Ae96eBe65dfc59674D620348) |
+| Deploy tx | [`0x8ab06a75e...`](https://celo-sepolia.blockscout.com/tx/0x8ab06a75e0d6d84025c07cc4ff7553e8cb0df49b56aa64b57b5ed6e53c738ff6) |
+| Explorer | [celo-sepolia.blockscout.com](https://celo-sepolia.blockscout.com) |
+
+Key functions: `registerAgent`, `logActivity`, `getTotalAgents`, `getTotalActivities`, `getAgentActivities`.
+
 ## Built for The Synthesis Hackathon
 
 Built by GitHub Copilot + Michiel Post for [The Synthesis](https://synthesis.md) hackathon.
