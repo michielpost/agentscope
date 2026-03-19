@@ -26,12 +26,39 @@ const celoSepolia = defineChain({
   testnet: true,
 })
 
+// Matches the actual contract ABI
 const ABI = [
-  { type: 'function', name: 'registerAgent', stateMutability: 'nonpayable', inputs: [{ name: 'name', type: 'string' }, { name: 'agentType', type: 'string' }], outputs: [] },
-  { type: 'function', name: 'logActivity', stateMutability: 'nonpayable', inputs: [{ name: 'protocol', type: 'string' }, { name: 'action', type: 'string' }, { name: 'description', type: 'string' }], outputs: [] },
-  { type: 'function', name: 'getAgentInfo', stateMutability: 'view', inputs: [{ name: 'agentAddress', type: 'address' }], outputs: [{ name: '', type: 'tuple', components: [{ name: 'agentAddress', type: 'address' }, { name: 'name', type: 'string' }, { name: 'agentType', type: 'string' }, { name: 'registeredAt', type: 'uint256' }, { name: 'activityCount', type: 'uint256' }] }] },
-  { type: 'function', name: 'getTotalAgents', stateMutability: 'view', inputs: [], outputs: [{ name: '', type: 'uint256' }] },
-  { type: 'function', name: 'getTotalActivities', stateMutability: 'view', inputs: [], outputs: [{ name: '', type: 'uint256' }] },
+  {
+    type: 'function', name: 'registerAgent', stateMutability: 'nonpayable',
+    inputs: [{ name: 'name', type: 'string' }, { name: 'agentType', type: 'string' }], outputs: []
+  },
+  {
+    type: 'function', name: 'logActivity', stateMutability: 'nonpayable',
+    inputs: [
+      { name: 'protocol', type: 'string' },
+      { name: 'action', type: 'string' },
+      { name: 'detail', type: 'string' },  // NOT description — matches contract
+    ], outputs: []
+  },
+  {
+    type: 'function', name: 'agents', stateMutability: 'view',
+    inputs: [{ name: '', type: 'address' }],
+    outputs: [
+      { name: 'name', type: 'string' },
+      { name: 'agentType', type: 'string' },
+      { name: 'registered', type: 'bool' },
+      { name: 'registeredAt', type: 'uint256' },
+      { name: 'activityCount', type: 'uint256' },
+    ]
+  },
+  {
+    type: 'function', name: 'getAgentCount', stateMutability: 'view',
+    inputs: [], outputs: [{ name: '', type: 'uint256' }]
+  },
+  {
+    type: 'function', name: 'isRegistered', stateMutability: 'view',
+    inputs: [{ name: 'agent', type: 'address' }], outputs: [{ name: '', type: 'bool' }]
+  },
 ]
 
 const account = privateKeyToAccount(privateKey)
@@ -55,34 +82,26 @@ async function send(functionName, args) {
 }
 
 async function main() {
-  // Check current totals
-  const [totalAgents, totalActivities] = await Promise.all([
-    publicClient.readContract({ address: AGENT_ACTIVITY_LOG_ADDRESS, abi: ABI, functionName: 'getTotalAgents' }),
-    publicClient.readContract({ address: AGENT_ACTIVITY_LOG_ADDRESS, abi: ABI, functionName: 'getTotalActivities' }),
-  ])
-  console.log(`Contract state: ${totalAgents} agents, ${totalActivities} activities`)
+  // Check current state
+  const totalAgents = await publicClient.readContract({
+    address: AGENT_ACTIVITY_LOG_ADDRESS, abi: ABI, functionName: 'getAgentCount',
+  })
+  console.log(`Contract state: ${totalAgents} registered agent(s)`)
 
   // Check if already registered
-  let alreadyRegistered = false
-  let currentActivityCount = 0
-  try {
-    const info = await publicClient.readContract({
-      address: AGENT_ACTIVITY_LOG_ADDRESS,
-      abi: ABI,
-      functionName: 'getAgentInfo',
-      args: [account.address],
-    })
-    if (info.registeredAt > 0n) {
-      alreadyRegistered = true
-      currentActivityCount = Number(info.activityCount)
-      console.log('Agent already registered:', info.name)
-      console.log('Activity count:', currentActivityCount)
-    }
-  } catch {
-    // not registered
-  }
+  const registered = await publicClient.readContract({
+    address: AGENT_ACTIVITY_LOG_ADDRESS, abi: ABI, functionName: 'isRegistered', args: [account.address],
+  })
 
-  if (!alreadyRegistered) {
+  let currentActivityCount = 0
+
+  if (registered) {
+    const agentInfo = await publicClient.readContract({
+      address: AGENT_ACTIVITY_LOG_ADDRESS, abi: ABI, functionName: 'agents', args: [account.address],
+    })
+    currentActivityCount = Number(agentInfo[4])
+    console.log(`Already registered: ${agentInfo[0]}, activities: ${currentActivityCount}`)
+  } else {
     await send('registerAgent', ['GitHub Copilot (AgentScope)', 'monitoring-dashboard'])
     await new Promise(r => setTimeout(r, 3000))
   }
@@ -108,22 +127,19 @@ async function main() {
     console.log('All activities already logged.')
   } else {
     console.log(`Logging ${toLog.length} new activities...`)
-    for (const [protocol, action, description] of toLog) {
-      await send('logActivity', [protocol, action, description])
+    for (const [protocol, action, detail] of toLog) {
+      await send('logActivity', [protocol, action, detail])
       await new Promise(r => setTimeout(r, 2000))
     }
   }
 
   // Final check
   const finalInfo = await publicClient.readContract({
-    address: AGENT_ACTIVITY_LOG_ADDRESS,
-    abi: ABI,
-    functionName: 'getAgentInfo',
-    args: [account.address],
+    address: AGENT_ACTIVITY_LOG_ADDRESS, abi: ABI, functionName: 'agents', args: [account.address],
   })
   console.log('\n✅ Done!')
-  console.log('Agent:', finalInfo.name)
-  console.log('Activity count:', finalInfo.activityCount.toString())
+  console.log('Agent:', finalInfo[0])
+  console.log('Activity count:', finalInfo[4].toString())
 }
 
 main().catch(console.error)
