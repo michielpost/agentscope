@@ -98,14 +98,19 @@ and any efficiency recommendations.`,
           </h1>
           <p className="text-sm text-gray-400 mt-1">Private Agents, Trusted Actions</p>
         </div>
-        <a
-          href="https://venice.ai"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-1.5 rounded-lg border border-purple-500/20 bg-purple-500/5 px-3 py-1.5 text-xs text-purple-300 hover:bg-purple-500/10 transition-colors"
-        >
-          venice.ai <ExternalLink size={12} />
-        </a>
+        <div className="flex items-center gap-2">
+          <a
+            href="https://venice.ai"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 rounded-lg border border-purple-500/20 bg-purple-500/5 px-3 py-1.5 text-xs text-purple-300 hover:bg-purple-500/10 transition-colors"
+          >
+            venice.ai <ExternalLink size={12} />
+          </a>
+          <span className="flex items-center gap-1.5 rounded-full border border-purple-500/30 bg-purple-500/10 px-3 py-1 text-xs font-medium text-purple-400">
+            <div className="h-1.5 w-1.5 rounded-full bg-purple-400 animate-pulse" />Live API
+          </span>
+        </div>
       </div>
 
       {/* Privacy banner */}

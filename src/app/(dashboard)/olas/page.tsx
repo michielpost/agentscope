@@ -1,5 +1,5 @@
 'use client'
-import { Cpu, Server, Coins, ShoppingBag } from 'lucide-react'
+import { Cpu, Server, Coins, ShoppingBag, Globe } from 'lucide-react'
 import { StatCard } from '@/components/ui/stat-card'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -18,16 +18,21 @@ export default function OlasPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-          <span className="text-indigo-400">⬡</span> Olas
-        </h2>
-        <p className="text-sm text-gray-400 mt-1">
-          Your agent&apos;s services on the Olas network
-        </p>
-        <div className="mt-2 rounded-lg border border-amber-500/20 bg-amber-500/5 px-3 py-2 text-xs text-amber-400">
-          <strong>Note:</strong> Pearl desktop app integration is on the roadmap — it requires the official Pearl team integration process. Current data is sourced directly from the Olas registry API.
+      <div className="flex items-start justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+            <span className="text-indigo-400">⬡</span> Olas
+          </h2>
+          <p className="text-sm text-gray-400 mt-1">
+            Your agent&apos;s services on the Olas network
+          </p>
         </div>
+        <div className="flex items-center gap-1.5 rounded-full border border-indigo-500/30 bg-indigo-500/10 px-3 py-1 text-xs font-medium text-indigo-400">
+          <Globe size={10} /><div className="h-1.5 w-1.5 rounded-full bg-indigo-400 animate-pulse" />Live Registry
+        </div>
+      </div>
+      <div className="rounded-lg border border-amber-500/20 bg-amber-500/5 px-3 py-2 text-xs text-amber-400">
+        <strong>Note:</strong> Pearl desktop app integration is on the roadmap — it requires the official Pearl team integration process. Current data is sourced directly from the Olas registry API.
       </div>
 
       {/* Stats */}

@@ -494,3 +494,110 @@ AgentActivityLog on Celo Sepolia: `0xa9eC3f9410F8E478Ae96eBe65dfc59674D620348`
 - Celo Alfajores deprecated March 2026 — Celo Sepolia is the current testnet
 - Agent-to-agent community interaction (Moltbook) directly improved the product roadmap
 - Building in public generates real feedback from real agents within hours
+
+---
+
+## Session 4: WalletConnect Integration & Live Wallet-Aware Dashboard
+
+### Turn 20 — WalletConnect Project ID
+- User registered at cloud.walletconnect.com, received project ID `8a7a8c41adbfbf48866e64d30d2b7e18`
+- Updated `.env.local` (gitignored) and instructed user to add to Vercel dashboard
+- Updated `src/lib/wagmi.ts` to use `NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID`
+
+### Turn 21 — MetaMask Not Detected (First Error)
+- Error: `Cannot find module '@metamask/sdk'` in production
+- Root cause: RainbowKit's default `metaMaskWallet` connector dynamically imports `@metamask/sdk` at runtime
+- Fix attempt 1: Switched to `injectedWallet` in `wagmi.ts` to use `window.ethereum` directly
+
+### Turn 22 — Overview Page Wallet-Aware Dashboard
+- Fully rewrote `src/app/(dashboard)/overview/page.tsx` as `'use client'` component
+- When wallet connected: live Celo portfolio, real Uniswap positions, merged activity feed
+- When no wallet: mock fallback with amber "Connect wallet for live data" badge
+- Animated green pulse indicator with truncated address in header
+- All stats (Celo USD total, Uniswap volume, Bankr spend) computed from live hooks
+
+### Turn 23 — MetaMask SDK Error Persists in Production
+- Error still appearing: Vercel was redeploying old deployment (`4jtMxA6sh`) not latest commit
+- Fix attempt 2: Added `turbopack.resolveAlias` in `next.config.ts` to stub `@metamask/sdk` and `@walletconnect/ethereum-provider` to empty module
+- Switched to `injectedWallet` only — dropped walletConnectWallet, coinbaseWallet, rainbowWallet
+
+### Turn 24 — Vercel Disconnected from Git
+- Vercel lost GitHub integration — auto-deploys stopped working
+- Fix: Used `npx vercel --prod --yes` to deploy directly from local files
+- Deployed successfully to `https://dashboard-three-smoky-78.vercel.app`
+
+### Turn 25 — Activity Page Real Data
+- Rewrote `src/app/(dashboard)/activity/page.tsx` to pull from all real hooks:
+  - Celo: `useCeloTransactions` → real Blockscout TX history
+  - Uniswap: `useUniswapSwaps` → real The Graph subgraph data
+  - Bankr: `useBankrUsage` → real LLM usage from Bankr gateway
+  - MetaMask: `useMetaMaskDelegations` → real ERC-7710 reads from Base Sepolia
+  - Octant: `useOctantAllocations` → real allocation API
+- All sorted by timestamp, merged into unified timeline
+- Filter pills show live counts, hide empty protocols
+- Live/Mock status badge in header
+
+---
+
+## Session 5: All Pages Wallet-Aware + Octant Service Fix
+
+### Turn 26 — Octant Page Real Data
+- Fixed root cause affecting ALL pages: `useApiData` had `deps: []` — hooks never re-ran when wallet connected
+- Updated `useApiData` to accept optional `deps[]` parameter so effects re-fire on address change
+- Updated all hooks to pass `[address]` as deps: `useCelo`, `useUniswap`, `useMetaMask`, `useOctant`, `useSuperRare`
+- Fixed `octant.ts` service: tries multiple API URLs, returns `[]` not mock when address provided
+- Octant API (`backend.production.octant.app`) appears to have migrated — fallback to mock epochs
+
+### Turn 27 — Integration Quality Audit
+- All 11 pages (10 protocols + overview) checked for mock data usage
+- Removed Arbitrum page entirely — it was 100% "Coming Soon" with no real data or API
+- Updated hackathon submission description to remove Arbitrum reference
+- No Arbitrum-specific prize track in submission — no track removal needed
+
+### Turn 28 — Uniswap, MetaMask, Bankr, SuperRare Wallet-Aware
+- All 4 pages now show Live/Mock status badge in header
+- Fixed service functions to return `[]` not mock when wallet connected (honest empty states)
+- `fetchUniswapSwaps/Positions` → returns `[]` for addresses with no history
+- `fetchSuperRareArtworks/Sales` → returns `[]` for addresses with no artworks
+- `fetchDelegations` → returns `[]` for addresses with no ERC-7710 delegations
+- Empty states show connected address: "No Uniswap swaps found for 0x1234…"
+- Bankr: clarified it is API-key based, not wallet-based; shows config error if key missing
+
+---
+
+## Session 6: Final Polish + Completion
+
+### Turn 29 — Remaining Pages Wallet-Aware
+- Added Live/Mock wallet badge to Celo page
+- Added Live Registry badge to Olas page (registry data is not address-specific)
+- Added Live API badge to Venice page (inference is API-key based)
+- All pages now have consistent status indicators
+
+### Final State Summary
+
+**Integrations (10 protocols):**
+| Protocol | Integration | Wallet-Aware |
+|---|---|---|
+| Uniswap | Real Graph subgraph queries | ✅ |
+| Celo | Real viem + Blockscout + CoinGecko | ✅ |
+| MetaMask | Real ERC-7710 viem getLogs | ✅ |
+| Bankr | Real LLM gateway API | API-key based |
+| SuperRare | Real GraphQL API | ✅ |
+| Octant | Real allocation API (fallback if down) | ✅ |
+| Olas | Real autonolas.tech registry API | Registry |
+| Venice | Real inference API + analyze button | API-key based |
+| Base/x402 | Real withX402 middleware on /api/feed | Server |
+| ERC-8004 | Real Base Mainnet viem reads | On-chain |
+
+**Smart Contract:**
+- AgentActivityLog on Celo Sepolia: `0xa9eC3f9410F8E478Ae96eBe65dfc59674D620348`
+- 1 registered agent, 12 on-chain activity transactions
+
+**ERC-8004:**
+- Base Mainnet contract: `0x8004A169FB4a3325136EB29fA0ceB6D2e539a432`
+- Token ID: 34312 | Registration TX: `0x79cc585b6a4cb1bbdd218c554128240d8e5575f8f6af6a8176299651e322b334`
+
+**Deployment:**
+- Live: https://dashboard-three-smoky-78.vercel.app
+- GitHub: https://github.com/michielpost/agentscope
+- Moltbook: https://www.moltbook.com/post/bbdee519-56c3-438e-91fb-79ede0ad27a8

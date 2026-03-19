@@ -1,5 +1,5 @@
 'use client'
-import { Coins, ArrowUpDown, Clock, ExternalLink, Activity } from 'lucide-react'
+import { Coins, ArrowUpDown, Clock, ExternalLink, Activity, Wifi, WifiOff } from 'lucide-react'
 import { StatCard } from '@/components/ui/stat-card'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -7,6 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { useCeloBalances, useCeloTransactions } from '@/hooks/useCelo'
 import { truncateAddress, formatTimeAgo } from '@/lib/utils'
 import { useApiData } from '@/hooks/useApiData'
+import { useAccount } from 'wagmi'
 import {
   getContractStats,
   getRecentActivities,
@@ -21,6 +22,7 @@ const defaultStats: ContractStats = { totalAgents: 0, totalActivities: 0 }
 const defaultActivities: OnChainActivity[] = []
 
 export default function CeloPage() {
+  const { address, isConnected } = useAccount()
   const { data: balances, loading: balancesLoading } = useCeloBalances()
   const { data: transactions, loading: txLoading } = useCeloTransactions()
   const { data: contractStats, loading: statsLoading } = useApiData(
@@ -43,6 +45,27 @@ export default function CeloPage() {
 
   return (
     <div className="space-y-6">
+      {/* Header with wallet status */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+            <span className="text-green-400">◎</span> Celo
+          </h2>
+          <p className="text-sm text-gray-400 mt-1">Balances, transactions, and on-chain activity</p>
+        </div>
+        <div className={`flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium ${
+          isConnected
+            ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-400'
+            : 'border-amber-500/30 bg-amber-500/10 text-amber-400'
+        }`}>
+          {isConnected ? (
+            <><div className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" /><Wifi size={10} />Live · {address?.slice(0,6)}…{address?.slice(-4)}</>
+          ) : (
+            <><WifiOff size={10} />Mock data — connect wallet</>
+          )}
+        </div>
+      </div>
+
       {/* On-Chain Agent Activity */}
       <Card>
         <CardHeader className="flex flex-row items-center justify-between pb-2">
