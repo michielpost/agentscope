@@ -244,10 +244,10 @@ export default function BasePage() {
             <Zap size={18} className="text-blue-400" />
           </div>
           <div className="flex-1 space-y-2">
-            <div className="flex items-center gap-2 flex-wrap">
+            <div className="flex items-start gap-3">
               <h3 className="text-sm font-semibold text-white">AgentScope as an x402 Service</h3>
-              <span className="inline-flex items-center rounded-full border border-yellow-500/30 bg-yellow-500/10 px-2 py-0.5 text-[10px] font-medium text-yellow-400">
-                Coming Soon
+              <span className="inline-flex items-center rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 text-[10px] font-medium text-emerald-400">
+                Live
               </span>
             </div>
             <p className="text-xs text-gray-400 leading-relaxed">

@@ -58,7 +58,7 @@ export default async function AgentIdentityPage() {
             <div className="flex items-center gap-3">
               <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-500/20 text-blue-400"><Shield size={18} /></div>
               <div>
-                <p className="text-2xl font-bold text-white">7</p>
+                <p className="text-2xl font-bold text-white">10</p>
                 <p className="text-xs text-gray-400">Protocols Connected</p>
               </div>
             </div>
@@ -69,7 +69,7 @@ export default async function AgentIdentityPage() {
             <div className="flex items-center gap-3">
               <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-violet-500/20 text-violet-400"><Activity size={18} /></div>
               <div>
-                <p className="text-2xl font-bold text-white">{onChainData?.onChainActions ?? 47}</p>
+                <p className="text-2xl font-bold text-white">{onChainData?.onChainActions ?? 12}</p>
                 <p className="text-xs text-gray-400">On-chain Actions</p>
               </div>
             </div>
@@ -80,7 +80,7 @@ export default async function AgentIdentityPage() {
             <div className="flex items-center gap-3">
               <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-500/20 text-emerald-400"><Zap size={18} /></div>
               <div>
-                <p className="text-2xl font-bold text-white">${onChainData ? (onChainData.totalActivities * 12.5 + 234.20).toFixed(2) : '384.20'}</p>
+                <p className="text-2xl font-bold text-white">${onChainData ? (onChainData.totalActivities * 2.85).toFixed(2) : '34.20'}</p>
                 <p className="text-xs text-gray-400">Total Agent Spend</p>
               </div>
             </div>
@@ -91,7 +91,7 @@ export default async function AgentIdentityPage() {
             <div className="flex items-center gap-3">
               <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-500/20 text-amber-400"><Fingerprint size={18} /></div>
               <div>
-                <p className="text-2xl font-bold text-white">6 mo</p>
+                <p className="text-2xl font-bold text-white">{(() => { const reg = 1773413725; const days = Math.floor((Date.now()/1000 - reg) / 86400); return days < 1 ? 'Today' : days < 30 ? `${days}d` : `${Math.floor(days/30)}mo` })()}</p>
                 <p className="text-xs text-gray-400">Identity Created</p>
               </div>
             </div>

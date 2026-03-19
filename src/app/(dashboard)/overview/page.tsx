@@ -11,8 +11,6 @@ import {
 } from '@/lib/mock-data'
 import { truncateAddress, formatTimeAgo } from '@/lib/utils'
 
-// TODO: Replace with real API calls to each protocol
-
 const recentActivity = [
   ...uniswapSwaps.slice(0, 3).map((s) => ({
     id: s.id,

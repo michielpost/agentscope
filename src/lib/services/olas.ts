@@ -41,7 +41,7 @@ export async function fetchOlasServices(): Promise<OlasService[]> {
       description: String(s.description ?? ''),
       agentCount: Number(s.agent_count ?? s.agents_count ?? 1),
       state: String(s.state ?? 'DEPLOYED'),
-      multisig: String(s.multisig ?? s.multisig_address ?? '0x'),
+      multisig: String(s.multisig ?? s.multisig_address ?? '0x0000000000000000000000000000000000000000'),
     }))
   } catch {
     return mockServices
