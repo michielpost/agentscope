@@ -601,3 +601,72 @@ AgentActivityLog on Celo Sepolia: `0xa9eC3f9410F8E478Ae96eBe65dfc59674D620348`
 - Live: https://dashboard-three-smoky-78.vercel.app
 - GitHub: https://github.com/michielpost/agentscope
 - Moltbook: https://www.moltbook.com/post/bbdee519-56c3-438e-91fb-79ede0ad27a8
+
+---
+
+### Session 7 — NaN ETH / NaN Celo Fix
+**Human:** "when logged in with metamask, it shows NaN ETH or NaN Celo, fix this to 0"
+
+When a real wallet is connected but API calls return `undefined`, `null`, or empty strings for numeric fields, `parseFloat()` produces `NaN`, which propagated through all `reduce()` and `.toFixed()` calls across the dashboard.
+
+**Fix:** Added `safeFloat(value)` utility to `src/lib/utils.ts`:
+- Returns `0` for `undefined`, `null`, empty string, or `NaN`
+- Replaced every `parseFloat(...)` call across all 8 dashboard pages with `safeFloat(...)`
+
+**Files changed:**
+- `src/lib/utils.ts` — added `safeFloat()` export
+- `src/app/(dashboard)/overview/page.tsx` — safeFloat for balance/usdValue/amountIn/amountOut/feesEarned
+- `src/app/(dashboard)/celo/page.tsx` — safeFloat for balance/usdValue fields
+- `src/app/(dashboard)/uniswap/page.tsx` — safeFloat for totalVolume/totalFees reduce
+- `src/app/(dashboard)/metamask/page.tsx` — safeFloat for spendLimit/spentSoFar reduce
+- `src/app/(dashboard)/superrare/page.tsx` — safeFloat for salePrice/price
+- `src/app/(dashboard)/octant/page.tsx` — safeFloat for amount/matchedRewards/totalRewards
+- `src/app/(dashboard)/olas/page.tsx` — safeFloat for stakedAmount reduce
+- `src/app/(dashboard)/activity/page.tsx` — safeFloat for tx.value/amountIn/amountOut
+
+Deployed via `npx vercel --prod --yes`. Commit: `53968e6`.
+
+---
+
+### Session 8 — NaN ETH in Topbar (ConnectButton)
+**Human:** "it still shows NaN ETH in the top where it also shows my address when connected to MetaMask"
+
+The NaN was coming from RainbowKit's built-in `<ConnectButton />` component itself — it displays `account.balanceFormatted` internally, which can be `NaN` when the RPC call is pending or returns an unexpected value.
+
+**Fix:** Replaced `<ConnectButton />` with `<ConnectButton.Custom>` render prop in `src/components/layout/topbar.tsx`:
+- Added `safeBalance(formatted)` local helper that guards `balanceFormatted` before display
+- Shows `0.0000 ETH` instead of `NaN ETH` when balance unavailable
+- Renders chain switcher button + account button separately with proper NaN guard
+- Used `account.balanceSymbol` (correct RainbowKit v2 field) instead of non-existent `balanceCurrency`
+
+Deployed via `npx vercel --prod --yes`. Commit: `4f24773`. Pushed to GitHub.
+
+---
+
+### Session 9 — Screenshots & Hackathon Submission Update
+**Human:** "Add some screenshots to the readme and submit those to the hackathon"
+
+**Approach:** Used Playwright (chromium) to programmatically capture screenshots of the live production site.
+
+**Pages captured:**
+1. Overview — main dashboard with stats and activity feed
+2. Activity — unified cross-protocol activity timeline
+3. Celo — token balances and transaction history
+4. Uniswap — swap history and liquidity positions
+5. Octant — public goods funding epochs and allocations
+6. Agent Identity — ERC-8004 on-chain identity card
+
+**Changes:**
+- `public/screenshots/` — 6 PNG screenshots added
+- `README.md` — 2-column screenshot grid added at the top with live demo link
+- Hackathon submission updated via `POST /projects/1a4ebd874d0e4acdb4fa658d053d444d`:
+  - `pictures` — all 6 raw GitHub screenshot URLs
+  - `coverImageURL` — overview screenshot
+
+Committed and pushed to GitHub. Commits: `011230c` (screenshots), `817a839` (cleanup).
+
+**Final project state:**
+- GitHub: https://github.com/michielpost/agentscope (27 commits)
+- Live: https://dashboard-three-smoky-78.vercel.app
+- Hackathon: submitted & published with screenshots
+- Moltbook: https://www.moltbook.com/post/bbdee519-56c3-438e-91fb-79ede0ad27a8
