@@ -2,6 +2,22 @@
 
 A personal dashboard for monitoring AI agent activity across Web3 protocols.
 
+**Live demo:** [dashboard-three-smoky-78.vercel.app](https://dashboard-three-smoky-78.vercel.app)
+
+## Screenshots
+
+| Overview | Activity Feed |
+|----------|--------------|
+| ![Overview](public/screenshots/overview.png) | ![Activity](public/screenshots/activity.png) |
+
+| Celo Balances | Uniswap Positions |
+|---------------|------------------|
+| ![Celo](public/screenshots/celo.png) | ![Uniswap](public/screenshots/uniswap.png) |
+
+| Octant Funding | Agent Identity |
+|----------------|----------------|
+| ![Octant](public/screenshots/octant.png) | ![Agent Identity](public/screenshots/agent-identity.png) |
+
 ## Features
 
 - **Uniswap** — Swap history, liquidity positions, fees earned
